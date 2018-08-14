@@ -1,17 +1,18 @@
 import {NgModule} from '@angular/core';
-import {PageTitleComponent} from '../components/page.title.component';
+import {FormsModule} from '@angular/forms';
+import {AngularFireModule} from 'angularfire2';
+import {SettingService} from './setting.service';
 import {IntIsOddPipe} from '../pipe/int.isOdd.pipe';
+import {BrowserModule} from '@angular/platform-browser';
+import {environment} from '../../environments/environment';
+import {AngularFireStorageModule} from 'angularfire2/storage';
+import {AngularFireDatabaseModule} from 'angularfire2/database';
+import {CalendarComponent} from '../components/calendar.component';
+import {PageTitleComponent} from '../components/page.title.component';
 import {ImageRatioComponent} from '../components/image.ratio.component';
+import {SeparateLeftComponent} from '../components/separate.left.component';
 import {SeparateRightComponent} from '../components/separate.right.component';
 import {StringNewLineTransformPipe} from '../pipe/string.newLineTransform.pipe';
-import {SeparateLeftComponent} from '../components/separate.left.component';
-import {SettingService} from './setting.service';
-import {environment} from '../../environments/environment';
-import {AngularFireDatabaseModule} from 'angularfire2/database';
-import {AngularFireStorageModule} from 'angularfire2/storage';
-import {AngularFireModule} from 'angularfire2';
-import {BrowserModule} from '@angular/platform-browser';
-import {FormsModule} from '@angular/forms';
 
 @NgModule({
   imports: [
@@ -21,7 +22,7 @@ import {FormsModule} from '@angular/forms';
     AngularFireStorageModule
   ],
   declarations: [
-    StringNewLineTransformPipe, IntIsOddPipe,
+    CalendarComponent, StringNewLineTransformPipe, IntIsOddPipe,
     PageTitleComponent, ImageRatioComponent, SeparateLeftComponent, SeparateRightComponent
   ],
   exports: [

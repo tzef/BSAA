@@ -1,5 +1,6 @@
 import {catchError, delay, flatMap, map, retry} from 'rxjs/operators';
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AngularFireStorage} from 'angularfire2/storage';
 import {ParagraphModel} from '../model/paragraph.model';
@@ -86,6 +87,17 @@ import {Observable, of, zip} from 'rxjs';
         </div>
       </div>
     </div>
+    <div class="container">
+      <div class="float-right" (click)="form_iframe.show();">
+        <a class="btn-floating btn-small btn-default waves-light" mdbWavesEffect>
+          <i class="fa fa-file-video-o"> </i>
+        </a>
+      </div>
+      <div *ngIf="embedVideoUrl" class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" [src]="embedVideoUrl" allowfullscreen>
+        </iframe>
+      </div>
+    </div>
 
     <div mdbModal #form_paragraph="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
       <div class="modal-dialog cascading-modal" role="document">
@@ -133,6 +145,31 @@ import {Observable, of, zip} from 'rxjs';
         </div>
       </div>
     </div>
+
+    <div mdbModal #form_iframe="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
+      <div class="modal-dialog cascading-modal" role="document">
+        <div class="modal-content">
+          <div class="modal-header light-blue darken-3 white-text">
+            <h4 class="title"><i class="fa fa-pencil"></i> 歷屆炫光 {{ history.title }} 嵌入影片 編輯 </h4>
+            <button id="form-iframe-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
+                    (click)="form_iframe.hide()">
+              <span>×</span>
+            </button>
+          </div>
+          <div class="modal-body mb-0">
+            <div class="md-form form-sm">
+              <input #iframe type="text" class="form-control" value="{{ this.embedVideoUrlString }}"
+                     placeholder="嵌入連結">
+            </div>
+          </div>
+          <div class="text-center mt-1-half">
+            <button class="btn btn-info mb-2 waves-light" mdbWavesEffect (click)="updateEmbedVideoUrl(iframe.value)">
+              更新 <i class="fa fa-save ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   `
 })
 export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDestroy {
@@ -147,6 +184,9 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
   carouselImageList: Observable<string[]>;
   uploadPercent: Observable<string>;
   inputImage: HTMLInputElement;
+  embedVideoUrlSubscription;
+  embedVideoUrlString = '';
+  embedVideoUrl: SafeUrl;
   uploading = false;
 
   @Input()
@@ -164,6 +204,15 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
         results.forEach(element => {
           this.history.paragraphList.push(new ParagraphModel(element.payload.val(), element.key));
         });
+      });
+    this.embedVideoUrlSubscription = this.database.object('plan/history/' + this.id + '/embedVideoUrl').snapshotChanges()
+      .subscribe(results => {
+        this.embedVideoUrlString = String(results.payload.val());
+        if (this.embedVideoUrlString !== '' && this.embedVideoUrlString !== 'null') {
+          this.embedVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.embedVideoUrlString);
+        } else {
+          this.embedVideoUrl = null;
+        }
       });
   }
   get id() {
@@ -195,7 +244,8 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private sanitizer: DomSanitizer) {
     this.settingService.path$.next(this.router.url);
   }
   addParagraph(text: string) {
@@ -263,6 +313,15 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
         });
     }
   }
+
+  updateEmbedVideoUrl(url: string) {
+    this.database.object('plan/history/' + this.id)
+      .update({ embedVideoUrl: url })
+      .then(_ => {
+        (document.getElementById('form-iframe-close-btn') as HTMLElement).click();
+      });
+  }
+
   ngOnInit() {
     this.routerSubscription = this.route
       .params
@@ -274,5 +333,6 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
   ngOnDestroy() {
     this.routerSubscription.unsubscribe();
     this.historySubscription.unsubscribe();
+    this.embedVideoUrlSubscription.unsubscribe();
   }
 }

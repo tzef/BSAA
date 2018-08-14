@@ -11,57 +11,67 @@ import {map} from 'rxjs/operators';
         <ul class="navbar-nav mr-auto">
           <ng-container *ngIf="isAuth$|async; else aboutElseBlock">
             <li class="nav-item waves-light" [ngClass]="highLightMenu == 'administrator/about' ? 'active' : ''" mdbWavesEffect>
-              <a class="nav-link" routerLink="administrator/about" routerLinkActive="active">{{ languageCode | i18nSelect:menuMap.about }}
+              <a class="nav-link" routerLink="administrator/about" routerLinkActive="active">
+                {{ languageCode | i18nSelect:menuMap.about }}
                 <span class="sr-only">(current)</span></a>
             </li>
           </ng-container>
           <ng-template #aboutElseBlock>
             <li class="nav-item waves-light" [ngClass]="highLightMenu == '/about' ? 'active' : ''" mdbWavesEffect>
-              <a class="nav-link" routerLink="/about" routerLinkActive="active">{{ languageCode | i18nSelect:menuMap.about }}
+              <a class="nav-link" routerLink="/about" routerLinkActive="active">
+                {{ languageCode | i18nSelect:menuMap.about }}
                 <span class="sr-only">(current)</span></a>
             </li>
           </ng-template>
           <li class="nav-item dropdown" dropdown>
             <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
-              炫光計劃
+              {{ languageCode | i18nSelect:menuMap.plan }}
             </a>
             <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
               <ng-container *ngIf="isAuth$|async; else planElseBlock">
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/plan/origin" routerLinkActive="active">
-                  炫光緣起
+                  {{ languageCode | i18nSelect:menuMap.planOrigin }}
                 </a>
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/plan/current" routerLinkActive="active">
-                  本屆炫光
+                  {{ languageCode | i18nSelect:menuMap.planCurrent }}
                 </a>
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/plan/history" routerLinkActive="active">
-                  歷屆炫光
+                  {{ languageCode | i18nSelect:menuMap.planHistory }}
                 </a>
               </ng-container>
               <ng-template #planElseBlock>
-                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/origin" routerLinkActive="active">炫光緣起</a>
-                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/current" routerLinkActive="active">本屆炫光</a>
-                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/history" routerLinkActive="active">歷屆炫光</a>
+                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/origin" routerLinkActive="active">
+                  {{ languageCode | i18nSelect:menuMap.planOrigin }}
+                </a>
+                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/current" routerLinkActive="active">
+                  {{ languageCode | i18nSelect:menuMap.planCurrent }}
+                </a>
+                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/history" routerLinkActive="active">
+                  {{ languageCode | i18nSelect:menuMap.planHistory }}
+                </a>
               </ng-template>
             </div>
           </li>
           <li class="nav-item dropdown" dropdown>
             <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
-              炫光小學堂
+              {{ languageCode | i18nSelect:menuMap.school }}
             </a>
             <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
               <ng-container *ngIf="isAuth$|async; else schoolElseBlock">
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/school/calendar" routerLinkActive="active">
-                  活動預告
+                  {{ languageCode | i18nSelect:menuMap.schoolCalendar }}
                 </a>
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/school/gallery" routerLinkActive="active">
-                  歷屆花絮
+                  {{ languageCode | i18nSelect:menuMap.schoolGallery }}
                 </a>
               </ng-container>
               <ng-template #schoolElseBlock>
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="school/calendar" routerLinkActive="active">
-                  活動預告
+                  {{ languageCode | i18nSelect:menuMap.schoolCalendar }}
                 </a>
-                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="school/gallery" routerLinkActive="active">歷屆花絮</a>
+                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="school/gallery" routerLinkActive="active">
+                  {{ languageCode | i18nSelect:menuMap.schoolGallery }}
+                </a>
               </ng-template>
             </div>
           </li>
@@ -96,10 +106,15 @@ export class NavigationMenuComponent implements OnDestroy {
   highLightMenu = '/about';
   languageCode: string;
   pathSubscription;
+  langSubscription;
   isAuth$;
   menuMap;
+
   constructor(private settingService: SettingService) {
-    this.languageCode = this.settingService.languageCode;
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+      });
     this.pathSubscription = this.settingService.path$
       .subscribe(url => {
         this.highLightMenu = url;
@@ -111,5 +126,6 @@ export class NavigationMenuComponent implements OnDestroy {
   }
   ngOnDestroy() {
     this.pathSubscription.unsubscribe();
+    this.langSubscription.unsubscribe();
   }
 }

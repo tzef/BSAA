@@ -1,9 +1,9 @@
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AngularFireStorage} from 'angularfire2/storage';
 import {ParagraphModel} from '../model/paragraph.model';
 import {SettingService} from '../core/setting.service';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {catchError} from 'rxjs/operators';
 import {Observable, of, zip} from 'rxjs';
 import {Router} from '@angular/router';
@@ -12,7 +12,15 @@ import {Router} from '@angular/router';
   template: `
     <app-carousel-main-component editMode="true" [imageList]=this.carouselImageList|async></app-carousel-main-component>
     <div class="container" style="margin-top: -50px">
-      <app-page-title-component title="關於協會"></app-page-title-component>
+      <div class="row">
+        <div class="col">
+          <app-page-title-component title="關於協會"></app-page-title-component>
+        </div>
+        <div class="col mt-3" style="text-align: right">
+          <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+                  routerLink="/plan/form">報名本屆炫光</button>
+        </div>
+      </div>
     </div>
     <ng-container *ngFor="let paragraph of paragraphList; let i = index">
       <div class="container">
@@ -97,7 +105,7 @@ export class PageAboutComponent implements OnInit, OnDestroy {
     this.embedVideoUrlSubscription = this.database.object('about/embedVideoUrl').snapshotChanges()
       .subscribe(results => {
         this.embedVideoUrlString = String(results.payload.val());
-        if (this.embedVideoUrlString !== '') {
+        if (this.embedVideoUrlString !== '' && this.embedVideoUrlString !== 'null') {
           this.embedVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.embedVideoUrlString);
         } else {
           this.embedVideoUrl = null;

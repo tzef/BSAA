@@ -8,12 +8,12 @@ import {Observable} from 'rxjs';
 @Component({
   template: `
     <div class="container">
-      <h5 class="mt-5">炫光計劃報名表</h5>
+      <h5 class="mt-5">炫光計畫報名表</h5>
       <div class="row mt-2">
         <div class="col-md-6">
           <div class="form-group">
             <strong>1. 作品上傳</strong>
-            <p>JPG檔/大小 1MB 以內</p>
+            <p>JPG檔/大小 300 KB 以內</p>
             <input mdbInputDirective type="file" class="form-control" (change)="this.formFile = $event.target.files[0]">
             <br>
             <p>或影音檔連結</p>
@@ -24,6 +24,18 @@ import {Observable} from 'rxjs';
                    [(ngModel)]="formVideoUrl">
             <p>備註：每人限傳一件作品：音樂、歌唱、舞蹈、戲劇等表演藝術或錄像作品，請以 3 分鐘為限，平面或立體作品長寬高限制在 100 公分以內。
             </p>
+            <p>作品名稱/媒材/尺寸</p>
+            <div class="row">
+              <div class="col-md-4">
+                <input type="text" name="formProductName" class="form-control" required [(ngModel)]="formProductName">
+              </div>
+              <div class="col-md-4">
+                <input type="text" name="formProductMaterial" class="form-control" required [(ngModel)]="formProductMaterial">
+              </div>
+              <div class="col-md-4">
+                <input type="text" name="formProductSize" class="form-control" required [(ngModel)]="formProductSize">
+              </div>
+            </div>
           </div>
           <div class="form-group">
             <strong>2. 姓名</strong>
@@ -34,7 +46,7 @@ import {Observable} from 'rxjs';
                    required [(ngModel)]="formName">
           </div>
           <div class="form-group">
-            <strong>3. 年齡<span style="font-size: 12px; color: darkgray;">(13-22 歲)</span></strong>
+            <strong>3. 年齡<span style="font-size: 12px; color: darkgray;">(至2018/9/16，實足歲滿13歲至未滿23歲之間)</span></strong>
             <input type="number"
                    name="formAge"
                    class="form-control"
@@ -85,12 +97,12 @@ import {Observable} from 'rxjs';
             <textarea type="text" [(ngModel)]="formIntroduce"
                       placeholder="ex: 熱愛東方文化。覺得悲劇非常美。或許是相由心生，沒表情的時候看起來很憂鬱。生長在桃園市郊，
 這裡一直有一種冷清的感覺，尤其陰雨天，窗外的一切看起來都帶著濃厚的疏離感。畫畫，是我最喜歡的事，能抒發情緒更能帶動成長，如果可以的話，
-我希望就這麼一直畫下去。" class="md-textarea form-control" rows="5"></textarea>
+我希望就這麼一直畫下去。" class="md-textarea form-control" rows="7"></textarea>
           </div>
           <div class="form-group">
             <strong>9. 理想<span style="font-size: 12px; color: darkgray;">(可填可不填)</span></strong>
             <textarea type="text" [(ngModel)]="formDream"
-                      class="md-textarea form-control" rows="6"></textarea>
+                      class="md-textarea form-control" rows="7"></textarea>
           </div>
           <div class="form-group">
             <strong>10. 作品創作理念<span style="font-size: 12px; color: darkgray;">(300字為限)</span></strong>
@@ -119,6 +131,9 @@ export class PagePlanFormComponent {
   year = new Date().getFullYear();
   formFile: HTMLInputElement;
   formVideoUrl = '';
+  formProductName = '';
+  formProductMaterial = '';
+  formProductSize = '';
   formName = '';
   formAge = '';
   formAddress = '';
@@ -146,7 +161,9 @@ export class PagePlanFormComponent {
         .then(_ => {
           if (this.toastFlag) {
             this.toastFlag = false;
-            const html = `<div>作品: </div><div><img src="${url}"></div><div>姓名: ${this.formName}</div><div>年齡: ${this.formAge}</div>
+            const html = `<div>作品: </div><div><img src="${url}"></div><div>影音檔連結: ${this.formVideoUrl}</div>
+<div>作品名稱: ${this.formProductName}</div><div>媒材: ${this.formProductMaterial}</div>
+<div>尺寸: ${this.formProductSize}</div><div>姓名: ${this.formName}</div><div>年齡: ${this.formAge}</div>
 <div>聯絡地址: ${this.formAddress}</div><div>住家電話: ${this.formHomePhone}</div><div>手機號碼: ${this.formCellPhone}</div>
 <div>Email: <a href="mailto:${this.formMail}">${this.formMail}</a></div><div>就讀學校: ${this.formSchool}</div>
 <div>自我介紹: ${this.formIntroduce}</div><div>理想: ${this.formDream}</div><div>創作理念: ${this.formCreateConcept}</div>
@@ -163,6 +180,9 @@ export class PagePlanFormComponent {
                 this.formKey = null;
                 this.formFile = null;
                 this.formVideoUrl = '';
+                this.formProductName = '';
+                this.formProductMaterial = '';
+                this.formProductSize = '';
                 this.formName = '';
                 this.formAge = '';
                 this.formAddress = '';
@@ -187,15 +207,18 @@ export class PagePlanFormComponent {
   }
 
   submit() {
-    console.log('submit/' + this.formVideoUrl + '/' + this.formName + '/' + this.formAge + '/' + this.formAddress +
-      '/' + this.formHomePhone + '/' + this.formCellPhone + '/' + this.formCellPhone + '/' + this.formMail +
-      '/' + this.formSchool + '/' + this.formIntroduce + '/' + this.formDream + '/' + this.formCreateConcept);
-    if (this.formFile == null) {
-      alert('請選擇一張圖片');
-    } else if (this.formFile.type !== 'image/jpeg' && this.formFile.type !== 'image/jpg') {
+    if (this.formFile == null && this.formVideoUrl === '') {
+      alert('請選擇一張圖片或影音檔連結');
+    } else if (this.formFile != null && this.formFile.type !== 'image/jpeg' && this.formFile.type !== 'image/jpg') {
       alert('圖片格式只接收 JPG 檔案');
-    } else if (this.formFile.size > 1024 * 1000) {
-      alert('檔案大小必需在 1MB 以內');
+    } else if (this.formFile != null && this.formFile.size > 1024 * 300) {
+      alert('檔案大小必需在 300KB 以內');
+    } else if (this.formProductName === '') {
+      alert('請輸入作品名稱');
+    } else if (this.formProductMaterial === '') {
+      alert('請輸入媒材');
+    } else if (this.formProductSize === '') {
+      alert('請輸入尺寸');
     } else if (this.formName === '') {
       alert('請輸入姓名');
     } else if (this.formAge === '') {
@@ -220,6 +243,10 @@ export class PagePlanFormComponent {
       this.uploading = true;
       this.database.list('plan/form/' + this.year)
         .push({
+          productName: this.formProductName,
+          productMaterial: this.formProductMaterial,
+          productSize: this.formProductSize,
+          videoUrl: this.formVideoUrl,
           name: this.formName,
           age: this.formAge,
           address: this.formAddress,
@@ -236,22 +263,62 @@ export class PagePlanFormComponent {
         .then(result => {
           this.toastFlag = true;
           this.formKey = result.key;
-          const fileRef = 'plan/form/' + this.year + '/' + result.key;
-          const task = this.storage.upload(fileRef, this.formFile);
-          this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
-            map((number) => {
-              if (number === 100) {
-                this.storage.ref(fileRef)
-                  .getDownloadURL()
-                  .pipe(delay(1000))
-                  .pipe(retry(2))
-                  .subscribe(value => {
-                    this.uploadedFileUrl = value;
-                  });
-              }
-              return number + '%';
-            })
-          );
+          if (this.formFile != null) {
+            const fileRef = 'plan/form/' + this.year + '/' + result.key;
+            const task = this.storage.upload(fileRef, this.formFile);
+            this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
+              map((number) => {
+                if (number === 100) {
+                  this.storage.ref(fileRef)
+                    .getDownloadURL()
+                    .pipe(delay(1000))
+                    .pipe(retry(2))
+                    .subscribe(value => {
+                      this.uploadedFileUrl = value;
+                    });
+                }
+                return number + '%';
+              })
+            );
+          } else {
+            if (this.toastFlag) {
+              this.toastFlag = false;
+              const html = `<div>作品: </div><div>影音檔連結: ${this.formVideoUrl}</div>
+<div>作品名稱: ${this.formProductName}</div><div>媒材: ${this.formProductMaterial}</div>
+<div>尺寸: ${this.formProductSize}</div><div>姓名: ${this.formName}</div><div>年齡: ${this.formAge}</div>
+<div>聯絡地址: ${this.formAddress}</div><div>住家電話: ${this.formHomePhone}</div><div>手機號碼: ${this.formCellPhone}</div>
+<div>Email: <a href="mailto:${this.formMail}">${this.formMail}</a></div><div>就讀學校: ${this.formSchool}</div>
+<div>自我介紹: ${this.formIntroduce}</div><div>理想: ${this.formDream}</div><div>創作理念: ${this.formCreateConcept}</div>
+<div>表單送出時間: ${this.date}</div>`;
+              this.database.object('sendBox/' + this.formKey)
+                .set({
+                  title: '報名本屆炫光_' + this.formName,
+                  html: html,
+                  date: this.date
+                })
+                .then(result2 => {
+                  this._uploadedFileUrl = null;
+                  this.uploading = false;
+                  this.formKey = null;
+                  this.formFile = null;
+                  this.formVideoUrl = '';
+                  this.formProductName = '';
+                  this.formProductMaterial = '';
+                  this.formProductSize = '';
+                  this.formName = '';
+                  this.formAge = '';
+                  this.formAddress = '';
+                  this.formHomePhone = '';
+                  this.formCellPhone = '';
+                  this.formMail = '';
+                  this.formSchool = '';
+                  this.formIntroduce = '';
+                  this.formDream = '';
+                  this.formCreateConcept = '';
+                  this.toastService.success('表單送出成功！');
+                });
+            }
+          }
         });
     }
   }

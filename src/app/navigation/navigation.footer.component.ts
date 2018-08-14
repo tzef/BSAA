@@ -24,7 +24,7 @@ import {Component} from '@angular/core';
       <!--/.Social buttons-->
 
       <div class="text-center">
-        <span style="font-size: 12px">11148 臺北市士林區忠誠路一段 62 號 3 樓 3F. </span><br>
+        <span style="font-size: 12px">11148 臺北市士林區忠誠路一段 62 號 3 樓 </span><br>
         <i class="fa fa-phone"> </i><span style="font-size: 12px"> 886-2-2833-2255 #131 </span>
         <i class="fa fa-envelope"> </i><span style="font-size: 12px"> info@bsaa.org </span>
       </div>

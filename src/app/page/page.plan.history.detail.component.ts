@@ -1,4 +1,5 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {ParagraphModel} from '../model/paragraph.model';
 import {AngularFireStorage} from 'angularfire2/storage';
@@ -64,6 +65,12 @@ import {Observable, of, zip} from 'rxjs';
         <app-separate-left-component></app-separate-left-component>
       </ng-template>
     </ng-container>
+    <div class="container">
+      <div *ngIf="embedVideoUrl" class="embed-responsive embed-responsive-16by9">
+        <iframe class="embed-responsive-item" [src]="embedVideoUrl" allowfullscreen>
+        </iframe>
+      </div>
+    </div>
   `
 })
 export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
@@ -73,6 +80,9 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
 
   history = new HistoryModel('', '');
   carouselImageList: Observable<string[]>;
+  embedVideoUrlSubscription;
+  embedVideoUrlString = '';
+  embedVideoUrl: SafeUrl;
 
   @Input()
   set id(id: string) {
@@ -90,6 +100,16 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
           this.history.paragraphList.push(new ParagraphModel(element.payload.val(), element.key));
         });
       });
+    this.embedVideoUrlSubscription = this.database.object('plan/history/' + this.id + '/embedVideoUrl').snapshotChanges()
+      .subscribe(results => {
+        this.embedVideoUrlString = String(results.payload.val());
+        console.log(this.embedVideoUrlString);
+        if (this.embedVideoUrlString !== '' && this.embedVideoUrlString !== 'null') {
+          this.embedVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.embedVideoUrlString);
+        } else {
+          this.embedVideoUrl = null;
+        }
+      });
   }
   get id() {
     return this._id;
@@ -99,7 +119,8 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router,
-              private route: ActivatedRoute) {
+              private route: ActivatedRoute,
+              private sanitizer: DomSanitizer) {
     this.settingService.path$.next(this.router.url);
   }
   ngOnInit() {
@@ -113,5 +134,6 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.routerSubscription.unsubscribe();
     this.historySubscription.unsubscribe();
+    this.embedVideoUrlSubscription.unsubscribe();
   }
 }

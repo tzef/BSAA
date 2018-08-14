@@ -1,5 +1,5 @@
 import {Router} from '@angular/router';
-import {Component} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {SettingService} from '../core/setting.service';
 
 @Component({
@@ -23,10 +23,16 @@ import {SettingService} from '../core/setting.service';
           <p class="text-left">管理者狀態<span style="font-size: 12px">(資料登打完畢記得登出)</span><a style="color: red" (click)="logout()"> [登出] </a></p>
         </ng-container>
       </div>
+      <!--<div class="col-auto align-self-center mb-2 d-none d-sm-block">-->
+        <!--<ng-container *ngIf="languageCode === 'zh'; else languageElseBlock1">-->
+          <!--<a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>-->
+        <!--</ng-container>-->
+        <!--<ng-template #languageElseBlock1>-->
+          <!--<a style="color: lightgray" (click)="changedLangToChinese()">中文</a> | <a (click)="changedLangToEnglish()">English</a>-->
+        <!--</ng-template>-->
+      <!--</div>-->
       <div class="col-auto align-self-center">
         <div class="text-center mb-3">
-          <!--<a (click)="changedLangToChinese()">中文</a>|-->
-          <!--<a (click)="changedLangToEnglish()">English</a>-->
           <a class="btn-floating waves-light" mdbWavesEffect
              href="https://www.facebook.com/%E5%8F%B0%E7%81%A3%E7%82%AB%E5%85%89%E8%97%9D%E8%A1%93%E5%8D%94%E6%9C%83-338836259459978/"
              target="_blank">
@@ -41,6 +47,14 @@ import {SettingService} from '../core/setting.service';
             <img src="/assets/youtube.png">
           </a>
         </div>
+        <!--<div class="text-center d-sm-none">-->
+          <!--<ng-container *ngIf="languageCode === 'zh'; else languageElseBlock2">-->
+            <!--<a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>-->
+          <!--</ng-container>-->
+          <!--<ng-template #languageElseBlock2>-->
+            <!--<a style="color: lightgray" (click)="changedLangToChinese()">中文</a> | <a (click)="changedLangToEnglish()">English</a>-->
+          <!--</ng-template>-->
+        <!--</div>-->
       </div>
     </div>
   `,
@@ -49,23 +63,36 @@ import {SettingService} from '../core/setting.service';
     `
   ]
 })
-export class NavigationHeaderComponent {
+export class NavigationHeaderComponent implements OnDestroy {
+  languageCode: string;
   isLoggedIn = false;
+  authSubscription;
+  langSubscription;
+
   constructor(private settingService: SettingService, private router: Router) {
-    this.settingService.authState$.subscribe(user => {
-      this.isLoggedIn = (user !== null);
-    });
+    this.authSubscription = this.settingService.authState$
+      .subscribe(user => {
+        this.isLoggedIn = (user !== null);
+      });
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+      });
   }
 
   logout() {
     this.settingService.logout();
-    this.router.navigate(['/about'])
+    this.router.navigate(['/about']);
   }
 
   changedLangToChinese() {
-    this.settingService.languageCode = 'zh';
+    this.settingService.langCode$.next('zh');
   }
   changedLangToEnglish() {
-    this.settingService.languageCode = 'en';
+    this.settingService.langCode$.next('en');
+  }
+  ngOnDestroy() {
+    this.authSubscription.unsubscribe();
+    this.langSubscription.unsubscribe();
   }
 }

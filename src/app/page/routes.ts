@@ -3,12 +3,15 @@ import {PagePlanFormComponent} from './page.plan.form.component';
 import {PagePlanOriginComponent} from './page.plan.origin.component';
 import {PagePlanCurrentComponent} from './page.plan.current.component';
 import {PagePlanHistoryComponent} from './page.plan.history.component';
+import {PagePlanHistoryDetailComponent} from './page.plan.history.detail.component';
 import {PageSchoolGalleryComponent} from './page.school.gallery.component';
 import {PageSchoolCalendarComponent} from './page.school.calendar.component';
-import {PagePlanHistoryDetailComponent} from './page.plan.history.detail.component';
 import {PageSchoolGalleryDetailComponent} from './page.school.gallery.detail.component';
 import {PageSchoolCalendarDetailComponent} from './page.school.calendar.detail.component';
 import {PageSchoolCalendarDetailFormComponent} from './page.school.calendar.detail.form.component';
+import {PageArtVrComponent} from './page.art.vr.component';
+import {PageArtUpcomingComponent} from './page.art.upcoming.component';
+import {PageArtUpcomingDetailComponent} from './page.art.upcoming.detail.component';
 
 export const routes = [
   {
@@ -64,24 +67,24 @@ export const routes = [
         component: PageSchoolGalleryDetailComponent
       }
     ]
+  },
+  {
+    path: 'art',
+    children: [
+      {
+        path: 'upcoming',
+        component: PageArtUpcomingComponent
+      },
+      {
+        path: 'upcoming/:id',
+        component: PageArtUpcomingDetailComponent
+      },
+      {
+        path: 'vr',
+        component: PageArtVrComponent
+      }
+    ]
   }
-  // {
-  //   path: 'art',
-  //   children: [
-  //     {
-  //       path: 'upcoming',
-  //       component: PageArtUpcomingComponent
-  //     },
-  //     {
-  //       path: 'upcoming/:id',
-  //       component: PageArtUpcomingDetailComponent
-  //     },
-  //     {
-  //       path: 'vr',
-  //       component: PageArtVrComponent
-  //     }
-  //   ]
-  // },
   // {
   //   path: 'database',
   //   children: [
