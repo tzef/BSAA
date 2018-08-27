@@ -21,7 +21,7 @@ import {Observable, of, zip} from 'rxjs';
           <div class="row">
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
-                <div class="col-12">
+                <div class="col-12" (click)="this.photoImg=paragraph.img; photoModal.show()">
                   <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
                   </app-image-ratio-component>
                 </div>
@@ -46,7 +46,7 @@ import {Observable, of, zip} from 'rxjs';
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
-                <div class="col-12">
+                <div class="col-12" (click)="this.photoImg=paragraph.img; photoModal.show()">
                   <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
                   </app-image-ratio-component>
                 </div>
@@ -71,7 +71,28 @@ import {Observable, of, zip} from 'rxjs';
         </iframe>
       </div>
     </div>
-  `
+    <div mdbModal #photoModal="mdbModal" class="modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div [ngStyle]="{'height':photoHeight}">
+            <img class="photoImg" src="{{ photoImg }}"/>
+          </div>
+          <div class="modal-footer">
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
+  styles: [
+    `
+      .photoImg {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        object-fit: cover;
+      }
+    `
+  ]
 })
 export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
   private historySubscription;
@@ -83,6 +104,8 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
   embedVideoUrlSubscription;
   embedVideoUrlString = '';
   embedVideoUrl: SafeUrl;
+  photoHeight = window.screen.height * 0.8 + 'px';
+  photoImg: string;
 
   @Input()
   set id(id: string) {
