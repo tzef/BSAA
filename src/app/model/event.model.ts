@@ -7,6 +7,7 @@ export class EventModel {
   imgUrl: string;
   content: string;
   subTitle: string;
+  enableForm: boolean;
   paragraphList: ParagraphModel[] = [];
 
   constructor(json, key = null) {
@@ -16,5 +17,6 @@ export class EventModel {
     this.imgUrl = json.imgUrl ? json.imgUrl : '';
     this.content = json.content ? json.content : '';
     this.subTitle = json.subTitle ? json.subTitle : '';
+    this.enableForm = json.enableForm !== undefined ? json.enableForm : true;
   }
 }

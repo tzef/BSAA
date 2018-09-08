@@ -82,6 +82,9 @@ export class PageSchoolCalendarComponent implements OnDestroy {
       return action
         .map(json => new EventModel(json.payload.val(), json.key))
         .filter(value => {
+          if (value.key === 'form') {
+            return false;
+          }
           if (this.searchIngKeyword === '') {
             return true;
           } else {
@@ -112,7 +115,15 @@ export class PageSchoolCalendarComponent implements OnDestroy {
       .list('school/calendar', ref => ref.orderByChild('date'))
       .snapshotChanges()
       .pipe(map(action => {
-        return action.map(json => new EventModel(json.payload.val(), json.key));
+        return action
+          .map(json => new EventModel(json.payload.val(), json.key))
+          .filter(value => {
+            if (value.key === 'form') {
+              return false;
+            } else {
+              return true;
+            }
+          });
       }))
       .subscribe(results => {
         this.eventList = results.reverse();

@@ -16,11 +16,21 @@ import {Observable, of, zip} from 'rxjs';
         <div class="col">
           <app-page-title-component title="活動預告 - {{ event.title }}"></app-page-title-component>
         </div>
-        <div class="col mt-3" style="text-align: right">
-          <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
-                  routerLink="/school/calendar/form/{{event.key}}">報名活動</button>
-        </div>
-      </div>
+        <ng-container *ngIf="this.event.enableForm; else formButtonElseBlock">
+          <div class="col mt-3" style="text-align: right">
+            <p>活動開放報名中</p>
+            <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+                    (click)="updateFormStatus(false)">關閉報名活動</button>
+          </div>
+        </ng-container>
+        <ng-template #formButtonElseBlock>
+          <div class="col mt-3" style="text-align: right" *ngIf="this.event.formButtonTitle !== ''">
+            <p>活動已關閉報名</p>
+            <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+                    (click)="updateFormStatus(true)">開放報名活動</button>
+          </div>
+        </ng-template>
+      <div>
     </div>
     <ng-container *ngFor="let paragraph of event.paragraphList; let i = index">
       <div class="container-fluid" style="position: absolute; z-index: 1">
@@ -270,6 +280,12 @@ export class AdministratorPageSchoolCalendarDetailComponent implements OnInit, O
           (document.getElementById('form-close-btn') as HTMLElement).click();
         });
     }
+  }
+  updateFormStatus(enabled: boolean) {
+    this.database.object('school/calendar/' + this.id)
+      .update({ enableForm: enabled })
+      .then(_ => {
+      });
   }
   ngOnInit() {
     this.routerSubscription = this.route

@@ -237,7 +237,7 @@ export class PagePlanFormComponent {
       alert('請輸入自我介紹');
     } else if (this.formCreateConcept === '') {
       alert('請輸入創作理念');
-    } else if (this.formCreateConcept.length > 300) {
+    } else if (this.formCreateConcept.length > 350) {
       alert('創作理念字數不得超過 300 字');
     } else {
       this.uploading = true;
