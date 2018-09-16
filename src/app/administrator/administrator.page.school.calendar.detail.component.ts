@@ -24,13 +24,13 @@ import {Observable, of, zip} from 'rxjs';
           </div>
         </ng-container>
         <ng-template #formButtonElseBlock>
-          <div class="col mt-3" style="text-align: right" *ngIf="this.event.formButtonTitle !== ''">
+          <div class="col mt-3" style="text-align: right">
             <p>活動已關閉報名</p>
             <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
                     (click)="updateFormStatus(true)">開放報名活動</button>
           </div>
         </ng-template>
-      <div>
+      </div>
     </div>
     <ng-container *ngFor="let paragraph of event.paragraphList; let i = index">
       <div class="container-fluid" style="position: absolute; z-index: 1">

@@ -4,7 +4,7 @@ import {Observable, of, zip} from 'rxjs';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AngularFireAuth} from 'angularfire2/auth';
 import {AngularFireStorage} from 'angularfire2/storage';
-import {catchError} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {SettingService} from '../core/setting.service';
 import {ParagraphModel} from '../model/paragraph.model';
 
@@ -16,7 +16,7 @@ import {ParagraphModel} from '../model/paragraph.model';
         <div class="col">
           <app-page-title-component title="炫光緣起"></app-page-title-component>
         </div>
-        <div class="col mt-3" style="text-align: right">
+        <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
                   routerLink="/plan/form">報名本屆炫光</button>
         </div>
@@ -76,6 +76,7 @@ import {ParagraphModel} from '../model/paragraph.model';
 })
 export class PagePlanOriginComponent implements OnInit, OnDestroy {
   carouselImageList: Observable<string[]>;
+  enableFormCurrent$: Observable<boolean>;
   paragraphList: ParagraphModel[] = [];
   paragraphListSubscription;
 
@@ -87,6 +88,10 @@ export class PagePlanOriginComponent implements OnInit, OnDestroy {
     this.getCarouselImageList();
   }
   ngOnInit() {
+    this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
+      .pipe(map(element => {
+        return element.payload.val() === true;
+      }));
     this.paragraphListSubscription = this.database.list('plan/origin/paragraphList').snapshotChanges()
       .subscribe(results => {
         this.paragraphList = results.map(element => {

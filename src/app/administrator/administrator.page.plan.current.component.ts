@@ -26,10 +26,20 @@ import {Router} from '@angular/router';
         <div class="col">
           <app-page-title-component title="本屆炫光"></app-page-title-component>
         </div>
-        <div class="col mt-3" style="text-align: right">
-          <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
-                  routerLink="/plan/form">報名本屆炫光</button>
-        </div>
+        <ng-container *ngIf="enableFormCurrent$|async; else formButtonElseBlock">
+          <div class="col mt-3" style="text-align: right">
+            <p>本屆炫光開放報名中</p>
+            <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+                    (click)="updateFormStatus(false)">關閉報名本屆炫光</button>
+          </div>
+        </ng-container>
+        <ng-template #formButtonElseBlock>
+          <div class="col mt-3" style="text-align: right">
+            <p>本屆炫光已關閉報名</p>
+            <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+                    (click)="updateFormStatus(true)">開放報名本屆炫光</button>
+          </div>
+        </ng-template>
       </div>
     </div>
     <ng-container *ngFor="let paragraph of paragraphList; let i = index">
@@ -191,6 +201,7 @@ import {Router} from '@angular/router';
 export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy {
   uploadingCarousel = false;
   carouselImageList: Observable<string[]>;
+  enableFormCurrent$: Observable<boolean>;
   carouselInputImages: HTMLInputElement[] = new Array(1);
   carouselUploadPercents: Observable<string>[] = new Array(1);
 
@@ -231,6 +242,10 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
     this.getCarouselImageList();
   }
   ngOnInit() {
+    this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
+      .pipe(map(element => {
+        return element.payload.val() === true;
+      }));
     this.paragraphListSubscription = this.database.list('plan/current/paragraphList').snapshotChanges()
       .subscribe(results => {
         this.paragraphList = results.map(element => {
@@ -338,5 +353,11 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
           (document.getElementById('form-paragraph-close-btn') as HTMLElement).click();
         });
     }
+  }
+  updateFormStatus(enabled: boolean) {
+    this.database.object('plan/current')
+      .update({ enableForm: enabled })
+      .then(_ => {
+      });
   }
 }

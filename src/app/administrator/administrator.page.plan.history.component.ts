@@ -14,7 +14,7 @@ import {Router} from '@angular/router';
         <div class="col">
           <app-page-title-component title="歷屆炫光" topImage=false></app-page-title-component>
         </div>
-        <div class="col mt-3" style="text-align: right">
+        <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
                   routerLink="/plan/form">報名本屆炫光</button>
         </div>
@@ -131,10 +131,15 @@ export class AdministratorPagePlanHistoryComponent implements OnDestroy {
   historyList: HistoryModel[];
   inputImage: HTMLInputElement;
   uploadPercent: Observable<string>;
+  enableFormCurrent$: Observable<boolean>;
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router) {
+    this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
+      .pipe(map(element => {
+        return element.payload.val() === true;
+      }));
     this.settingService.path$.next(this.router.url);
     this.getInfo();
   }

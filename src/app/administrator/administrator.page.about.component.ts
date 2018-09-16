@@ -27,7 +27,7 @@ import {Router} from '@angular/router';
         <div class="col">
           <app-page-title-component title="關於協會"></app-page-title-component>
         </div>
-        <div class="col mt-3" style="text-align: right">
+        <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
                   routerLink="/plan/form">報名本屆炫光</button>
         </div>
@@ -237,6 +237,7 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
   uploadPercent: Observable<string>;
   paragraphList: ParagraphModel[] = [];
   carouselImageList: Observable<string[]>;
+  enableFormCurrent$: Observable<boolean>;
   newParagraph = new ParagraphModel('', '');
   editingParagraph = new ParagraphModel('', '');
   carouselInputImages: HTMLInputElement[] = new Array(4);
@@ -270,6 +271,10 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
     this.getCarouselImageList();
   }
   ngOnInit() {
+    this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
+      .pipe(map(element => {
+        return element.payload.val() === true;
+      }));
     this.paragraphListSubscription = this.database.list('about/paragraphList').snapshotChanges()
       .subscribe(results => {
         this.paragraphList = results.map(element => {

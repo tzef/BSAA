@@ -119,7 +119,12 @@ import {Observable} from 'rxjs';
             {{ uploadPercent | async }}
           </div>
           <p class="float-right">
-            <input type="submit" class="btn btn-dark" value="提交" (click)="submit()">
+            <ng-container *ngIf="this.enableFormCurrent$|async; else enableFormElseBlock">
+              <input type="submit" class="btn btn-dark" value="提交" (click)="submit()">
+            </ng-container>
+            <ng-template #enableFormElseBlock>
+              <input type="submit" class="btn btn-dark" value="報名已截止" disabled>
+            </ng-template>
           </p>
         </div>
       </div>
@@ -127,6 +132,7 @@ import {Observable} from 'rxjs';
   `
 })
 export class PagePlanFormComponent {
+  enableFormCurrent$: Observable<boolean>;
   date = Date();
   year = new Date().getFullYear();
   formFile: HTMLInputElement;
@@ -150,7 +156,12 @@ export class PagePlanFormComponent {
   private _uploadedFileUrl: string;
   uploadPercent: Observable<string>;
 
-  constructor(private database: AngularFireDatabase, private storage: AngularFireStorage, private toastService: ToastService) {}
+  constructor(private database: AngularFireDatabase, private storage: AngularFireStorage, private toastService: ToastService) {
+    this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
+      .pipe(map(element => {
+        return element.payload.val() === true;
+      }));
+  }
 
   @Input()
   set uploadedFileUrl(url: string) {

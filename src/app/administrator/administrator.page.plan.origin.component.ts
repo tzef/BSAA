@@ -26,7 +26,7 @@ import {ParagraphModel} from '../model/paragraph.model';
         <div class="col">
           <app-page-title-component title="炫光緣起"></app-page-title-component>
         </div>
-        <div class="col mt-3" style="text-align: right">
+        <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
                   routerLink="/plan/form">報名本屆炫光</button>
         </div>
@@ -191,6 +191,7 @@ import {ParagraphModel} from '../model/paragraph.model';
 export class AdministratorPagePlanOriginComponent implements OnInit, OnDestroy {
   uploadingCarousel = false;
   carouselImageList: Observable<string[]>;
+  enableFormCurrent$: Observable<boolean>;
   carouselInputImages: HTMLInputElement[] = new Array(1);
   carouselUploadPercents: Observable<string>[] = new Array(1);
 
@@ -231,6 +232,10 @@ export class AdministratorPagePlanOriginComponent implements OnInit, OnDestroy {
     this.getCarouselImageList();
   }
   ngOnInit() {
+    this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
+      .pipe(map(element => {
+        return element.payload.val() === true;
+      }));
     this.paragraphListSubscription = this.database.list('plan/origin/paragraphList').snapshotChanges()
       .subscribe(results => {
         this.paragraphList = results.map(element => {

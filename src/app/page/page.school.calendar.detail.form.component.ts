@@ -74,9 +74,12 @@ import {EventModel} from '../model/event.model';
               <input type="text" name="formRelation" class="form-control" [(ngModel)]="formRelationOthers">
             </div>
           </div>
-          <p class="float-right">
-            <input type="submit" class="btn btn-dark" value="提交" (click)="submit()">
-          </p>
+          <ng-container *ngIf="this.event.enableForm === true; else enableFormElseBlock">
+            <p class="float-right"><input type="submit" class="btn btn-dark" value="提交" (click)="submit()"></p>
+          </ng-container>
+          <ng-template #enableFormElseBlock>
+            <p class="float-right"><input type="submit" class="btn btn-dark" disabled value="報名已截止"></p>
+          </ng-template>
         </div>
       </div>
     </div>
