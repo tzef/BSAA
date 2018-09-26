@@ -10,6 +10,7 @@ import {AdministratorPageSchoolCalendarComponent} from './administrator.page.sch
 import {AdministratorPageSchoolCalendarDetailComponent} from './administrator.page.school.calendar.detail.component';
 import {AdministratorPageSchoolGalleryComponent} from './administrator.page.school.gallery.component';
 import {AdministratorPageSchoolGalleryDetailComponent} from './administrator.page.school.gallery.detail.component';
+import {AdministratorPageDonationComponents} from './administrator.page.donation.components';
 
 export const routes = [{
   path: 'administrator',
@@ -70,6 +71,11 @@ export const routes = [{
           component: AdministratorPageSchoolGalleryDetailComponent
         }
       ]
-    }
+    },
+    {
+      path: 'support',
+      canActivate: [AuthGuard],
+      component: AdministratorPageDonationComponents
+    },
   ]
 }];

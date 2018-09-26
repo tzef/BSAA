@@ -1,20 +1,53 @@
-import {catchError, delay, map, retry} from 'rxjs/operators';
-import {Component, Input, OnDestroy} from '@angular/core';
+import {Component, ElementRef, Input, OnDestroy} from '@angular/core';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AngularFireStorage} from 'angularfire2/storage';
 import {SettingService} from '../core/setting.service';
 import {DonationModel} from '../model/donation.model';
-import {ToastService} from 'ng-uikit-pro-standard';
+import {catchError, delay, map, retry} from 'rxjs/operators';
 import {Observable, of, zip} from 'rxjs';
 import {Router} from '@angular/router';
+import {ToastService} from 'ng-uikit-pro-standard';
 
 @Component({
   template: `
+    <div class="container-fluid" style="position: absolute; z-index: 1">
+      <div class="row">
+        <div class="col-11">
+          <div class="float-right" (click)="form_carousel.show()">
+            <a class="btn-floating btn-small btn-default waves-light" mdbWavesEffect>
+              <i class="fa fa-edit"> </i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
     <app-carousel-main-component editMode="true" [imageList]=this.carouselImageList|async></app-carousel-main-component>
+    <div class="container-fluid" style="position: absolute; z-index: 1">
+      <div class="row">
+        <div class="col-11">
+          <div class="float-right" (click)="form_desc.show()">
+            <a class="btn-floating btn-small btn-default waves-light" mdbWavesEffect>
+              <i class="fa fa-edit"> </i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="container">
       <ng-container *ngFor="let text of this.donation.description|stringNewLine">
         <p>{{ text }}</p>
       </ng-container>
+    </div>
+    <div class="container-fluid" style="position: absolute; z-index: 1">
+      <div class="row">
+        <div class="col-11">
+          <div class="float-right" (click)="form_plan.show()">
+            <a class="btn-floating btn-small btn-default waves-light" mdbWavesEffect>
+              <i class="fa fa-edit"> </i>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="container">
       <div class="row">
@@ -268,11 +301,176 @@ import {Router} from '@angular/router';
         </div>
       </div>
     </div>
+    <div class="container-fluid" style="position: absolute; z-index: 1">
+      <div class="row">
+        <div class="col-11">
+          <div class="float-right" (click)="form_photo.show()">
+            <a class="btn-floating btn-small btn-default waves-light" mdbWavesEffect>
+              <i class="fa fa-edit"> </i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div mdbModal #form_carousel="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
+      <div class="modal-dialog cascading-modal" role="document">
+        <div class="modal-content">
+          <div class="modal-header light-blue darken-3 white-text">
+            <h4 class="title"><i class="fa fa-pencil"></i> 贊助炫光圖片編輯 </h4>
+            <button id="form-carousel-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
+                    (click)="form_carousel.hide()">
+              <span>×</span>
+            </button>
+          </div>
+          <div class="modal-body mb-0">
+            <div class="md-form form-sm" *ngFor="let image of carouselImageList|async; let i = index">
+              <i class="fa fa-picture-o"> 圖片 {{i + 1}} </i>
+              <div *ngIf="image !== ''">
+                <button class="btn btn-primary waves-light" mdbWavesEffect (click)="deleteCarouselFile(thumbnail, i)">
+                  <i class="fa fa-trash-o mr-1"></i> Delete
+                </button>
+                <img #thumbnail src="{{ image }}" class="img-thumbnail">
+              </div>
+              <input mdbInputDirective type="file" class="form-control" (change)="this.carouselInputImages[i] = $event.target.files[0]">
+              <div *ngIf="uploadingCarousel === true" style="height: 20px; background-color: burlywood"
+                   [ngStyle]="{'width' : carouselUploadPercents[i] | async}">
+                {{ carouselUploadPercents[i] | async }}
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-1-half">
+            <button class="btn btn-info mb-2 waves-light" mdbWavesEffect (click)="uploadCarouselFile()">
+              更新 <i class="fa fa-save ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div mdbModal #form_desc="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
+      <div class="modal-dialog cascading-modal" role="document">
+        <div class="modal-content">
+          <div class="modal-header light-blue darken-3 white-text">
+            <h4 class="title"><i class="fa fa-pencil"></i> 贊助炫光描述編輯 </h4>
+            <button id="form-description-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
+                    (click)="form_desc.hide()">
+              <span>×</span>
+            </button>
+          </div>
+          <div class="modal-body mb-0">
+            <div class="md-form form-sm">
+              <div class="row">
+                <div class="col-12">
+                  <textarea #description type="text" class="md-textarea form-control" rows="6" value="{{ this.donation.description }}">
+                  </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-1-half">
+            <button class="btn btn-info mb-2 waves-light" mdbWavesEffect (click)="updateDescription(description.value)">
+              更新 <i class="fa fa-save ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div mdbModal #form_plan="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
+      <div class="modal-dialog cascading-modal" role="document">
+        <div class="modal-content">
+          <div class="modal-header light-blue darken-3 white-text">
+            <h4 class="title"><i class="fa fa-pencil"></i> 贊助炫光招募計畫編輯 </h4>
+            <button id="form-plan-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
+                    (click)="form_plan.hide()">
+              <span>×</span>
+            </button>
+          </div>
+          <div class="modal-body mb-0">
+            <div class="md-form form-sm">
+              <div class="row">
+                <div class="col-12">
+                  <textarea #plan type="text" class="md-textarea form-control" rows="6" value="{{ this.donation.plan }}">
+                  </textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-1-half">
+            <button class="btn btn-info mb-2 waves-light" mdbWavesEffect (click)="updatePlan(plan.value)">
+              更新 <i class="fa fa-save ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div mdbModal #form_photo="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
+      <div class="modal-dialog cascading-modal" role="document">
+        <div class="modal-content">
+          <div class="modal-header light-blue darken-3 white-text">
+            <h4 class="title"><i class="fa fa-pencil"></i> 贊助炫光招募計畫圖片編輯 </h4>
+            <button id="form-photo-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
+                    (click)="form_photo.hide()">
+              <span>×</span>
+            </button>
+          </div>
+          <div class="modal-body mb-0">
+            <div class="md-form form-sm">
+              <div class="row">
+                <div class="col-6 border-dark">
+                  <app-image-ratio-component image="{{ this.planPhoto1Image|async }}}" ratio="16:9">
+                  </app-image-ratio-component>
+                  <input mdbInputDirective type="file" class="form-control" (change)="this.inputImage1 = $event.target.files[0]">
+                </div>
+                <div class="col-6 border-dark">
+                  <app-image-ratio-component image="{{ this.planPhoto2Image|async }}}" ratio="16:9">
+                  </app-image-ratio-component>
+                  <input mdbInputDirective type="file" class="form-control" (change)="this.inputImage2 = $event.target.files[0]">
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <input #title1 type="text" class="form-control" placeholder="標題" value="{{ this.donation.photo1title }}">
+                </div>
+                <div class="col-6">
+                  <input #title2 type="text" class="form-control" placeholder="標題" value="{{ this.donation.photo2title }}">
+                </div>
+              </div>
+              <div *ngIf="uploadingImage1 === true" style="height: 20px; background-color: burlywood"
+                   [ngStyle]="{'width' : uploadImage1Percent | async}">
+                {{ uploadImage1Percent | async }}
+              </div>
+              <div *ngIf="uploadingImage2 === true" style="height: 20px; background-color: burlywood"
+                   [ngStyle]="{'width' : uploadImage2Percent | async}">
+                {{ uploadImage2Percent | async }}
+              </div>
+            </div>
+          </div>
+          <div class="text-center mt-1-half">
+            <button class="btn btn-info mb-2 waves-light" mdbWavesEffect (click)="updatePhoto(title1.value, title2.value)">
+              更新 <i class="fa fa-save ml-1"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   `,
   styles: [`
   `]
 })
-export class PageDonationComponent implements OnDestroy {
+export class AdministratorPageDonationComponents implements OnDestroy {
+  uploadingImage1 = false;
+  uploadingImage2 = false;
+  uploadingCarousel = false;
+  inputImage1: HTMLInputElement;
+  inputImage2: HTMLInputElement;
+  uploadImage1Percent: Observable<string>;
+  uploadImage2Percent: Observable<string>;
+  carouselInputImages: HTMLInputElement[] = new Array(1);
+  carouselUploadPercents: Observable<string>[] = new Array(1);
+
   private subscription;
   displayPlan = true;
   displayForm = false;
@@ -334,7 +532,91 @@ export class PageDonationComponent implements OnDestroy {
     this.planPhoto1Image = this.storage.ref('donation/plan/image_1').getDownloadURL().pipe(catchError(_ => of('')));
     this.planPhoto2Image = this.storage.ref('donation/plan/image_2').getDownloadURL().pipe(catchError(_ => of('')));
   }
-
+  deleteCarouselFile(elementRef: ElementRef, index: number) {
+    this.storage.ref('donation/carousel/image_' + index).delete();
+    this.getCarouselImageList();
+  }
+  uploadCarouselFile() {
+    this.uploadingCarousel = true;
+    const observableList$: Observable<string>[] = [];
+    this.carouselInputImages.forEach((image, index) => {
+      const task = this.storage.ref('donation/carousel/image_' + index).put(image);
+      this.carouselUploadPercents[index] =  task.percentageChanges().pipe(
+        map((number) => number + '%')
+      );
+      observableList$.push(this.carouselUploadPercents[index]);
+    });
+    zip(...observableList$)
+      .subscribe(value => {
+        let check = true;
+        for (const element of value) {
+          if (element !== '100%') {
+            check = false;
+          }
+        }
+        if (check) {
+          (document.getElementById('form-carousel-close-btn') as HTMLElement).click();
+          this.getCarouselImageList();
+        }
+      });
+  }
+  updateDescription(text: string) {
+    this.database.object('donation')
+      .update({ description: text })
+      .then(_ => {
+        (document.getElementById('form-description-close-btn') as HTMLElement).click();
+      }, reason => {
+        (document.getElementById('form-description-close-btn') as HTMLElement).click();
+      });
+  }
+  updatePlan(text: string) {
+    this.database.object('donation')
+      .update({ plan: text })
+      .then(_ => {
+        (document.getElementById('form-plan-close-btn') as HTMLElement).click();
+      }, reason => {
+        (document.getElementById('form-plan-close-btn') as HTMLElement).click();
+      });
+  }
+  updatePhoto(title1: string, title2: string) {
+    const observableList$: Observable<string>[] = [];
+    if (this.inputImage1 != null) {
+      this.uploadingImage1 = true;
+      const task1 = this.storage.ref('donation/plan/image_1').put(this.inputImage1);
+      this.uploadImage1Percent =  task1.percentageChanges().pipe(
+        map((number) => number + '%')
+      );
+      observableList$.push(this.uploadImage1Percent);
+    }
+    if (this.inputImage2 != null) {
+      this.uploadingImage2 = true;
+      const task2 = this.storage.ref('donation/plan/image_2').put(this.inputImage2);
+      this.uploadImage1Percent =  task2.percentageChanges().pipe(
+        map((number) => number + '%')
+      );
+      observableList$.push(this.uploadImage2Percent);
+    }
+    zip(...observableList$)
+      .subscribe(value => {
+        let check = true;
+        for (const element of value) {
+          if (element !== '100%') {
+            check = false;
+          }
+        }
+        if (check) {
+          (document.getElementById('form-photo-close-btn') as HTMLElement).click();
+          this.getCarouselImageList();
+        }
+      });
+    this.database.object('donation')
+      .update({ photo1title: title1, photo2title: title2 })
+      .then(_ => {
+        (document.getElementById('form-photo-close-btn') as HTMLElement).click();
+      }, reason => {
+        (document.getElementById('form-photo-close-btn') as HTMLElement).click();
+      });
+  }
   showForm() {
     this.displayPlan = false;
     this.displayForm = true;

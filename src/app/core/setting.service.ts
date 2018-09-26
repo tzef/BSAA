@@ -47,6 +47,10 @@ export class SettingService {
         'en' : 'Gallery',
         'zh' : '歷屆花絮',
       },
+      donation : {
+        'en' : 'Support',
+        'zh' : '加入支持',
+      },
     };
   }
   logout() {

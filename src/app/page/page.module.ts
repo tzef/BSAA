@@ -1,6 +1,5 @@
 import {routes} from './routes';
 import {NgModule} from '@angular/core';
-import {AgmCoreModule} from '@agm/core';
 import {FormsModule} from '@angular/forms';
 import {RouterModule} from '@angular/router';
 import {CoreModule} from '../core/core.module';
@@ -33,10 +32,6 @@ import {PageSchoolCalendarDetailFormComponent} from './page.school.calendar.deta
     BrowserModule, FormsModule,
     ModalGalleryModule.forRoot(),
     NavigationModule, CoreModule,
-    AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyAbQR5RhbaDwz6Kw3tGUgSmIdwRYCy9qxM',
-      language: 'zh-TW'
-    }),
     RouterModule.forChild(routes),
     MDBBootstrapModulesPro.forRoot()
   ],

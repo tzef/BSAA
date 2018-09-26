@@ -93,9 +93,20 @@ import {map} from 'rxjs/operators';
               <!--<a class="dropdown-item waves-light" mdbWavesEffect routerLink="/database/coolguy" routerLinkActive="active">炫小子</a>-->
             <!--</div>-->
           <!--</li>-->
-          <!--<li class="nav-item waves-light" [ngClass]="highLightMenu == '/donation' ? 'active' : ''" mdbWavesEffect>-->
-            <!--<a class="nav-link" routerLink="/donation" routerLinkActive="active">贊助炫光</a>-->
-          <!--</li>-->
+          <ng-container *ngIf="isAuth$|async; else donationElseBlock">
+            <li class="nav-item waves-light" [ngClass]="highLightMenu == 'administrator/support' ? 'active' : ''" mdbWavesEffect>
+              <a class="nav-link" routerLink="administrator/support" routerLinkActive="active">
+                {{ languageCode | i18nSelect:menuMap.donation }}
+                <span class="sr-only">(current)</span></a>
+            </li>
+          </ng-container>
+          <ng-template #donationElseBlock>
+            <li class="nav-item waves-light" [ngClass]="highLightMenu == '/support' ? 'active' : ''" mdbWavesEffect>
+              <a class="nav-link" routerLink="/support" routerLinkActive="active">
+                {{ languageCode | i18nSelect:menuMap.donation }}
+                <span class="sr-only">(current)</span></a>
+            </li>
+          </ng-template>
         </ul>
       </links>
     </mdb-navbar>

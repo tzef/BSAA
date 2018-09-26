@@ -1,11 +1,10 @@
-import {Component} from '@angular/core';
 import {Observable} from 'rxjs';
-import {AngularFireDatabase} from 'angularfire2/database';
-import {AngularFireAuth} from 'angularfire2/auth';
-import {Router} from '@angular/router';
-import {AngularFireStorage} from 'angularfire2/storage';
-import {SettingService} from '../core/setting.service';
 import {map} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {Component} from '@angular/core';
+import {SettingService} from '../core/setting.service';
+import {AngularFireStorage} from 'angularfire2/storage';
+import {AngularFireDatabase} from 'angularfire2/database';
 
 @Component({
   template: `

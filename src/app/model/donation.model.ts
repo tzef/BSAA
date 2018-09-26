@@ -1,15 +1,13 @@
 export class DonationModel {
   description: string;
-  lat: number;
-  lng: number;
-  zoomValue: number;
-  key: string;
+  plan: string;
+  photo1title: string;
+  photo2title: string;
 
-  constructor(json, key = null) {
+  constructor(json) {
     this.description = json.description ? json.description : '';
-    this.lat = json.latitude ? json.latitude : '';
-    this.lng = json.longitude ? json.longitude : '';
-    this.zoomValue = json.zoomValue ? json.zoomValue : '';
-    this.key = key;
+    this.plan = json.plan ? json.plan : '';
+    this.photo1title = json.photo1title ? json.photo1title : '';
+    this.photo2title = json.photo2title ? json.photo2title : '';
   }
 }
