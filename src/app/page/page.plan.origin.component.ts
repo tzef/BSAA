@@ -1,12 +1,11 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {Observable, of, zip} from 'rxjs';
-import {AngularFireDatabase} from 'angularfire2/database';
-import {AngularFireAuth} from 'angularfire2/auth';
-import {AngularFireStorage} from 'angularfire2/storage';
 import {catchError, map} from 'rxjs/operators';
 import {SettingService} from '../core/setting.service';
 import {ParagraphModel} from '../model/paragraph.model';
+import {AngularFireStorage} from 'angularfire2/storage';
+import {AngularFireDatabase} from 'angularfire2/database';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 
 @Component({
   template: `

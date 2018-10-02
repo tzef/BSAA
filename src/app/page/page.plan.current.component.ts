@@ -38,7 +38,12 @@ import {Router} from '@angular/router';
             </div>
             <div class="col-xl-10 col-lg-9 col-md-8">
               <ng-container *ngFor="let text of paragraph.content|stringNewLine">
-                <p>{{ text }}</p>
+                <ng-container *ngIf="text|linkModel; else isLinkElseBlock; let link">
+                  <a href="{{ link[1] }}" target="_blank">{{ link[2] }}</a>
+                </ng-container>
+                <ng-template #isLinkElseBlock>
+                  <p>{{ text }}</p>
+                </ng-template>
               </ng-container>
             </div>
           </div>
@@ -47,7 +52,12 @@ import {Router} from '@angular/router';
           <div class="row">
             <div class="col-xl-10 col-lg-9 col-md-8">
               <ng-container *ngFor="let text of paragraph.content|stringNewLine">
-                <p>{{ text }}</p>
+                <ng-container *ngIf="text|linkModel; else isLinkElseBlock; let link">
+                  <a href="{{ link[1] }}" target="_blank">{{ link[2] }}</a>
+                </ng-container>
+                <ng-template #isLinkElseBlock>
+                  <p>{{ text }}</p>
+                </ng-template>
               </ng-container>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4">
