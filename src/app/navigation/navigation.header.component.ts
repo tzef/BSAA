@@ -23,14 +23,14 @@ import {SettingService} from '../core/setting.service';
           <p class="text-left">管理者狀態<span style="font-size: 12px">(資料登打完畢記得登出)</span><a style="color: red" (click)="logout()"> [登出] </a></p>
         </ng-container>
       </div>
-      <!--<div class="col-auto align-self-center mb-2 d-none d-sm-block">-->
-        <!--<ng-container *ngIf="languageCode === 'zh'; else languageElseBlock1">-->
-          <!--<a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>-->
-        <!--</ng-container>-->
-        <!--<ng-template #languageElseBlock1>-->
-          <!--<a style="color: lightgray" (click)="changedLangToChinese()">中文</a> | <a (click)="changedLangToEnglish()">English</a>-->
-        <!--</ng-template>-->
-      <!--</div>-->
+      <div class="col-auto align-self-center mb-2 d-none d-sm-block">
+        <ng-container *ngIf="languageCode === 'zh'; else languageElseBlock1">
+          <a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>
+        </ng-container>
+        <ng-template #languageElseBlock1>
+          <a style="color: lightgray" (click)="changedLangToChinese()">中文</a> | <a (click)="changedLangToEnglish()">English</a>
+        </ng-template>
+      </div>
       <div class="col-auto align-self-center">
         <div class="text-center mb-3">
           <a class="btn-floating waves-light" mdbWavesEffect
@@ -47,14 +47,14 @@ import {SettingService} from '../core/setting.service';
             <img src="/assets/youtube.png">
           </a>
         </div>
-        <!--<div class="text-center d-sm-none">-->
-          <!--<ng-container *ngIf="languageCode === 'zh'; else languageElseBlock2">-->
-            <!--<a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>-->
-          <!--</ng-container>-->
-          <!--<ng-template #languageElseBlock2>-->
-            <!--<a style="color: lightgray" (click)="changedLangToChinese()">中文</a> | <a (click)="changedLangToEnglish()">English</a>-->
-          <!--</ng-template>-->
-        <!--</div>-->
+        <div class="text-center d-sm-none">
+          <ng-container *ngIf="languageCode === 'zh'; else languageElseBlock2">
+            <a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>
+          </ng-container>
+          <ng-template #languageElseBlock2>
+            <a style="color: lightgray" (click)="changedLangToChinese()">中文</a> | <a (click)="changedLangToEnglish()">English</a>
+          </ng-template>
+        </div>
       </div>
     </div>
   `,

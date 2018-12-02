@@ -1,16 +1,22 @@
-import {AdministratorLoginComponent} from './administrator.login.component';
 import {AuthGuard} from './administrator.auth.guard';
+import {AdministratorLoginComponent} from './administrator.login.component';
 import {AdministratorCenterComponent} from './administrator.center.component';
 import {AdministratorPageAboutComponent} from './administrator.page.about.component';
+import {AdministratorPageArtVrComponent} from './administrator.page.art.vr.component';
+import {AdministratorPageDonationComponents} from './administrator.page.donation.components';
 import {AdministratorPagePlanOriginComponent} from './administrator.page.plan.origin.component';
 import {AdministratorPagePlanCurrentComponent} from './administrator.page.plan.current.component';
 import {AdministratorPagePlanHistoryComponent} from './administrator.page.plan.history.component';
-import {AdministratorPagePlanHistoryDetailComponent} from './administrator.page.plan.history.detail.component';
-import {AdministratorPageSchoolCalendarComponent} from './administrator.page.school.calendar.component';
-import {AdministratorPageSchoolCalendarDetailComponent} from './administrator.page.school.calendar.detail.component';
+import {AdministratorPageArtUpcomingComponent} from './administrator.page.art.upcoming.component';
 import {AdministratorPageSchoolGalleryComponent} from './administrator.page.school.gallery.component';
+import {AdministratorPageSchoolCalendarComponent} from './administrator.page.school.calendar.component';
+import {AdministratorPageDatabaseArtistComponent} from './administrator.page.database.artist.component';
+import {AdministratorPageDatabaseCoolguyComponent} from './administrator.page.database.coolguy.component';
+import {AdministratorPagePlanHistoryDetailComponent} from './administrator.page.plan.history.detail.component';
+import {AdministratorPageArtUpcomingDetailComponent} from './administrator.page.art.upcoming.detail.component';
 import {AdministratorPageSchoolGalleryDetailComponent} from './administrator.page.school.gallery.detail.component';
-import {AdministratorPageDonationComponents} from './administrator.page.donation.components';
+import {AdministratorPageSchoolCalendarDetailComponent} from './administrator.page.school.calendar.detail.component';
+import {AdministratorPageDatabaseArtistDetailComponent} from './administrator.page.database.artist.detail.component';
 
 export const routes = [{
   path: 'administrator',
@@ -60,16 +66,64 @@ export const routes = [{
         },
         {
           path: 'calendar/:id',
+          canActivate: [AuthGuard],
           component: AdministratorPageSchoolCalendarDetailComponent
         },
         {
           path: 'gallery',
+          canActivate: [AuthGuard],
           component: AdministratorPageSchoolGalleryComponent
         },
         {
           path: 'gallery/:id',
+          canActivate: [AuthGuard],
           component: AdministratorPageSchoolGalleryDetailComponent
         }
+      ]
+    },
+    {
+      path: 'art',
+      children: [
+        {
+          path: 'upcoming',
+          canActivate: [AuthGuard],
+          component: AdministratorPageArtUpcomingComponent
+        },
+        {
+          path: 'upcoming/:id',
+          canActivate: [AuthGuard],
+          component: AdministratorPageArtUpcomingDetailComponent
+        },
+        {
+          path: 'vr',
+          canActivate: [AuthGuard],
+          component: AdministratorPageArtVrComponent
+        }
+      ]
+    },
+    {
+      path: 'database',
+      children: [
+        {
+          path: 'artist',
+          canActivate: [AuthGuard],
+          component: AdministratorPageDatabaseArtistComponent
+        },
+        {
+          path: 'artist/:id',
+          canActivate: [AuthGuard],
+          component: AdministratorPageDatabaseArtistDetailComponent
+        },
+        {
+          path: 'coolguy',
+          canActivate: [AuthGuard],
+          component: AdministratorPageDatabaseCoolguyComponent
+        },
+        {
+          path: 'coolguy/:id',
+          canActivate: [AuthGuard],
+          component: AdministratorPageDatabaseArtistDetailComponent
+        },
       ]
     },
     {

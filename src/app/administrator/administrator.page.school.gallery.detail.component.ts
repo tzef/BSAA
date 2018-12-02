@@ -22,10 +22,8 @@ import {Observable} from 'rxjs';
                 </a>
               </div>
             </div>
-            <div class="m-1">
-              <app-image-ratio-component image="{{ image.url }}" ratio="1:1">
-              </app-image-ratio-component>
-            </div>
+            <app-image-ratio-component image="{{ image.url }}" ratio="1:1">
+            </app-image-ratio-component>
           </div>
         </ng-container>
         <div class="col-md-2 col-sm-4 col-6 mt-4">
@@ -36,10 +34,8 @@ import {Observable} from 'rxjs';
               </a>
             </div>
           </div>
-          <div class="m-1">
-            <app-image-ratio-component image="" ratio="1:1">
-            </app-image-ratio-component>
-          </div>
+          <app-image-ratio-component image="" ratio="1:1">
+          </app-image-ratio-component>
         </div>
       </div>
     </div>

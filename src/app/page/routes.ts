@@ -1,18 +1,21 @@
 import {PageAboutComponent} from './page.about.component';
 import {PageArtVrComponent} from './page.art.vr.component';
+import {PageArtUpcomingComponent} from './page.art.upcoming.component';
+import {PageArtUpcomingDetailComponent} from './page.art.upcoming.detail.component';
 import {PageDonationComponent} from './page.donation.component';
 import {PagePlanFormComponent} from './page.plan.form.component';
 import {PagePlanOriginComponent} from './page.plan.origin.component';
 import {PagePlanCurrentComponent} from './page.plan.current.component';
 import {PagePlanHistoryComponent} from './page.plan.history.component';
-import {PageArtUpcomingComponent} from './page.art.upcoming.component';
+import {PagePlanHistoryDetailComponent} from './page.plan.history.detail.component';
 import {PageSchoolGalleryComponent} from './page.school.gallery.component';
 import {PageSchoolCalendarComponent} from './page.school.calendar.component';
-import {PageArtUpcomingDetailComponent} from './page.art.upcoming.detail.component';
-import {PagePlanHistoryDetailComponent} from './page.plan.history.detail.component';
 import {PageSchoolGalleryDetailComponent} from './page.school.gallery.detail.component';
 import {PageSchoolCalendarDetailComponent} from './page.school.calendar.detail.component';
 import {PageSchoolCalendarDetailFormComponent} from './page.school.calendar.detail.form.component';
+import {PageDatabaseArtistComponent} from './page.database.artist.component';
+import {PageDatabaseCoolguyComponent} from './page.database.coolguy.component';
+import {PageDatabaseArtistDetailComponent} from './page.database.artist.detail.component';
 
 export const routes = [
   {
@@ -86,27 +89,27 @@ export const routes = [
       }
     ]
   },
-  // {
-  //   path: 'database',
-  //   children: [
-  //     {
-  //       path: 'artist',
-  //       component: PageDatabaseArtistComponent
-  //     },
-  //     {
-  //       path: 'artist/:id',
-  //       component: PageDatabaseArtistDetailComponent
-  //     },
-  //     {
-  //       path: 'coolguy',
-  //       component: PageDatabaseCoolguyComponent
-  //     },
-  //     {
-  //       path: 'coolguy/:id',
-  //       component: PageDatabaseArtistDetailComponent
-  //     },
-  //   ]
-  // },
+  {
+    path: 'database',
+    children: [
+      {
+        path: 'artist',
+        component: PageDatabaseArtistComponent
+      },
+      {
+        path: 'artist/:id',
+        component: PageDatabaseArtistDetailComponent
+      },
+      {
+        path: 'coolguy',
+        component: PageDatabaseCoolguyComponent
+      },
+      {
+        path: 'coolguy/:id',
+        component: PageDatabaseArtistDetailComponent
+      },
+    ]
+  },
   {
     path: 'support',
     component: PageDonationComponent

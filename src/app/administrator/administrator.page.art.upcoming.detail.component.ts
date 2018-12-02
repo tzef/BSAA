@@ -1,22 +1,21 @@
-import {catchError, delay, flatMap, map, retry} from 'rxjs/operators';
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
-import {AngularFireDatabase} from 'angularfire2/database';
-import {AngularFireStorage} from 'angularfire2/storage';
+import {Observable, of, zip} from 'rxjs';
+import {UpcomingModel} from '../model/upcoming.model';
+import {SettingService} from '../core/setting.service';
 import {ParagraphModel} from '../model/paragraph.model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SettingService} from '../core/setting.service';
-import {HistoryModel} from '../model/history.model';
-import {Observable, of, zip} from 'rxjs';
+import {AngularFireStorage} from 'angularfire2/storage';
+import {AngularFireDatabase} from 'angularfire2/database';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {catchError, delay, flatMap, map, retry} from 'rxjs/operators';
 
 @Component({
   template: `
     <app-carousel-main-component editMode="true" [imageList]=this.carouselImageList|async></app-carousel-main-component>
     <div class="container" style="margin-top: -50px">
-      <app-page-title-component title="歷屆炫光 - {{ history.title }}"></app-page-title-component>
+      <app-page-title-component title="活動預告 - {{ upcoming.title }}"></app-page-title-component>
     </div>
-    <ng-container *ngFor="let paragraph of history.paragraphList; let i = index">
-      <div class="container-fluid" style="position: absolute; z-index: 1">
+    <ng-container *ngFor="let paragraph of upcoming.paragraphList; let i = index">
+      <div class="container-fluid" style="position: absolute">
         <div class="row">
           <div class="col-11">
             <div class="float-right" (click)="this.inputImage = null; this.editingParagraph = paragraph; form_paragraph.show()">
@@ -33,7 +32,7 @@ import {Observable, of, zip} from 'rxjs';
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
                 <div class="col-12">
-                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
+                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="活動預告 - {{ upcoming.title }}">
                   </app-image-ratio-component>
                 </div>
                 <div class="col-12">
@@ -58,7 +57,7 @@ import {Observable, of, zip} from 'rxjs';
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
                 <div class="col-12">
-                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
+                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="活動預告 - {{ upcoming.title }}">
                   </app-image-ratio-component>
                 </div>
                 <div class="col-12" style="text-align: right">
@@ -76,7 +75,7 @@ import {Observable, of, zip} from 'rxjs';
         <app-separate-left-component></app-separate-left-component>
       </ng-template>
     </ng-container>
-    <div class="container" style="position: absolute; margin-top: -55px; z-index: 1">
+    <div class="container" style="position: absolute; margin-top: -55px">
       <div class="row">
         <div class="col-1"></div>
         <div class="float-left" (click)="this.inputImage = null;
@@ -87,23 +86,12 @@ import {Observable, of, zip} from 'rxjs';
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="float-right" (click)="form_iframe.show();">
-        <a class="btn-floating btn-small btn-default waves-light" mdbWavesEffect>
-          <i class="fa fa-file-video-o"> </i>
-        </a>
-      </div>
-      <div *ngIf="embedVideoUrl" class="embed-responsive embed-responsive-16by9">
-        <iframe class="embed-responsive-item" [src]="embedVideoUrl" allowfullscreen>
-        </iframe>
-      </div>
-    </div>
 
     <div mdbModal #form_paragraph="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
       <div class="modal-dialog cascading-modal" role="document">
         <div class="modal-content">
           <div class="modal-header light-blue darken-3 white-text">
-            <h4 class="title"><i class="fa fa-pencil"></i> 歷屆炫光 - {{ history.title }} 內容編輯 </h4>
+            <h4 class="title"><i class="fa fa-pencil"></i> 活動預告 - {{ upcoming.title }} 內容編輯 </h4>
             <button id="form-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
                     (click)="form_paragraph.hide()">
               <span>×</span>
@@ -117,8 +105,8 @@ import {Observable, of, zip} from 'rxjs';
                   </app-image-ratio-component>
                 </div>
                 <div class="col-8">
-                  <textarea #paragraph type="text" class="md-textarea form-control" rows="2" value="{{ editingParagraph.content }}">
-                  </textarea>
+                  <textarea #paragraph type="text"
+                            class="md-textarea form-control" rows="2" value="{{ editingParagraph.content }}"></textarea>
                 </div>
               </div>
               <input mdbInputDirective type="file" class="form-control" (change)="this.inputImage = $event.target.files[0]">
@@ -145,74 +133,37 @@ import {Observable, of, zip} from 'rxjs';
         </div>
       </div>
     </div>
-
-    <div mdbModal #form_iframe="mdb-modal" class="modal fade" tabindex="-1" role="dialog" style="overflow: auto;">
-      <div class="modal-dialog cascading-modal" role="document">
-        <div class="modal-content">
-          <div class="modal-header light-blue darken-3 white-text">
-            <h4 class="title"><i class="fa fa-pencil"></i> 歷屆炫光 {{ history.title }} 嵌入影片 編輯 </h4>
-            <button id="form-iframe-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
-                    (click)="form_iframe.hide()">
-              <span>×</span>
-            </button>
-          </div>
-          <div class="modal-body mb-0">
-            <div class="md-form form-sm">
-              <input #iframe type="text" class="form-control" value="{{ this.embedVideoUrlString }}"
-                     placeholder="嵌入連結">
-            </div>
-          </div>
-          <div class="text-center mt-1-half">
-            <button class="btn btn-info mb-2 waves-light" mdbWavesEffect (click)="updateEmbedVideoUrl(iframe.value)">
-              更新 <i class="fa fa-save ml-1"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
   `
 })
-export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDestroy {
+export class AdministratorPageArtUpcomingDetailComponent implements OnInit, OnDestroy {
   private _uploadedImgUrl: string;
-  private historySubscription;
+  private upcomingSubscription;
   private routerSubscription;
   private _id: string;
 
   editingParagraph = new ParagraphModel('', '');
   newParagraph = new ParagraphModel('', '');
-  history = new HistoryModel('', '');
+  upcoming = new UpcomingModel('', '');
   carouselImageList: Observable<string[]>;
   uploadPercent: Observable<string>;
   inputImage: HTMLInputElement;
-  embedVideoUrlSubscription;
-  embedVideoUrlString = '';
-  embedVideoUrl: SafeUrl;
   uploading = false;
 
   @Input()
   set id(id: string) {
     this._id = id;
     this.carouselImageList = zip(
-      this.storage.ref('plan/history/image_' + id).getDownloadURL().pipe(catchError(_ => of('')))
+      this.storage.ref('art/upcoming/image_' + id).getDownloadURL().pipe(catchError(_ => of('')))
     );
-    this.historySubscription = this.database.object('plan/history/' + id).snapshotChanges().pipe(
+    this.upcomingSubscription = this.database.object('art/upcoming/' + id).snapshotChanges().pipe(
       flatMap(results => {
-        this.history = new HistoryModel(results.payload.val(), results.key);
-        return this.database.list('plan/history/' + id + '/paragraphList').snapshotChanges();
+        this.upcoming = new UpcomingModel(results.payload.val(), results.key);
+        return this.database.list('art/upcoming/' + id + '/paragraphList').snapshotChanges();
       }))
       .subscribe(results => {
         results.forEach(element => {
-          this.history.paragraphList.push(new ParagraphModel(element.payload.val(), element.key));
+          this.upcoming.paragraphList.push(new ParagraphModel(element.payload.val(), element.key));
         });
-      });
-    this.embedVideoUrlSubscription = this.database.object('plan/history/' + this.id + '/embedVideoUrl').snapshotChanges()
-      .subscribe(results => {
-        this.embedVideoUrlString = String(results.payload.val());
-        if (this.embedVideoUrlString !== '' && this.embedVideoUrlString !== 'null') {
-          this.embedVideoUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.embedVideoUrlString);
-        } else {
-          this.embedVideoUrl = null;
-        }
       });
   }
   get id() {
@@ -223,7 +174,7 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
   set uploadedImgUrl(url: string) {
     if (this.uploadedImgUrl !== url) {
       this._uploadedImgUrl = url;
-      this.database.object('plan/history/' + this.id + '/paragraphList/' + this.editingParagraph.key)
+      this.database.object('art/upcoming/' + this.id + '/paragraphList/' + this.editingParagraph.key)
         .update({ content: this.editingParagraph.content, img : url })
         .then(_ => {
           this.uploading = false;
@@ -244,19 +195,18 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router,
-              private route: ActivatedRoute,
-              private sanitizer: DomSanitizer) {
+              private route: ActivatedRoute) {
     this.settingService.path$.next(this.router.url);
   }
   addParagraph(text: string) {
     if (this.inputImage) {
       this.uploading = true;
-      this.database.list('plan/history/' + this.id + '/paragraphList')
+      this.database.list('art/upcoming/' + this.id + '/paragraphList')
         .push({content: text, img: 'imageUploading'})
         .then(result => {
           this.editingParagraph.content = text;
           this.editingParagraph.key = result.key;
-          const fileRef = 'plan/history/' + this.id + '/paragraphList/image_' + result.key;
+          const fileRef = 'art/upcoming/' + this.id + '/paragraphList/image_' + result.key;
           const task = this.storage.upload(fileRef, this.inputImage);
           this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
             map((number) => {
@@ -278,15 +228,15 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
     }
   }
   deleteParagraph() {
-    this.storage.ref('plan/history/' + this.id + '/paragraphList/image_' + this.editingParagraph.key).delete();
-    this.database.object('plan/history/' + this.id + '/paragraphList/' + this.editingParagraph.key).remove().then( _ => {
+    this.storage.ref('art/upcoming/' + this.id + '/paragraphList/image_' + this.editingParagraph.key).delete();
+    this.database.object('art/upcoming/' + this.id + '/paragraphList/' + this.editingParagraph.key).remove().then( _ => {
       (document.getElementById('form-close-btn') as HTMLElement).click();
     });
   }
   updateParagraph(text: string) {
     if (this.inputImage) {
       this.uploading = true;
-      const fileRef = 'plan/history/' + this.id + '/paragraphList/image_' + this.editingParagraph.key;
+      const fileRef = 'art/upcoming/' + this.id + '/paragraphList/image_' + this.editingParagraph.key;
       const task = this.storage.upload(fileRef, this.inputImage);
       this.editingParagraph.content = text;
       this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
@@ -304,8 +254,8 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
         })
       );
     } else {
-      this.database.object('plan/history/' + this.id + '/paragraphList/' + this.editingParagraph.key)
-        .update({ content: text })
+      this.database.object('art/upcoming/' + this.id + '/paragraphList/' + this.editingParagraph.key)
+        .update({ content: text})
         .then(_ => {
           this.uploading = false;
           this._uploadedImgUrl = null;
@@ -313,15 +263,6 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
         });
     }
   }
-
-  updateEmbedVideoUrl(url: string) {
-    this.database.object('plan/history/' + this.id)
-      .update({ embedVideoUrl: url })
-      .then(_ => {
-        (document.getElementById('form-iframe-close-btn') as HTMLElement).click();
-      });
-  }
-
   ngOnInit() {
     this.routerSubscription = this.route
       .params
@@ -332,7 +273,6 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
 
   ngOnDestroy() {
     this.routerSubscription.unsubscribe();
-    this.historySubscription.unsubscribe();
-    this.embedVideoUrlSubscription.unsubscribe();
+    this.upcomingSubscription.unsubscribe();
   }
 }

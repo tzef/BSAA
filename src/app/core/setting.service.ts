@@ -47,6 +47,30 @@ export class SettingService {
         'en' : 'Gallery',
         'zh' : '歷屆花絮',
       },
+      art : {
+        'en' : 'Art',
+        'zh' : '炫藝場',
+      },
+      artUpcoming : {
+        'en' : 'Art Upcoming',
+        'zh' : '活動預告',
+      },
+      artVR : {
+        'en' : 'VR',
+        'zh' : 'VR藝廊',
+      },
+      database : {
+        'en' : 'Artist Database',
+        'zh' : '藝術家資料庫',
+      },
+      databaseArtist: {
+        'en' : 'Artist',
+        'zh' : '大藝術家',
+      },
+      databaseCoolGuy: {
+        'en' : 'Cool Guy',
+        'zh' : '炫小子',
+      },
       donation : {
         'en' : 'Support',
         'zh' : '加入支持',

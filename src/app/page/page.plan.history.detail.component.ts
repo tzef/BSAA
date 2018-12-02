@@ -73,12 +73,8 @@ import {Observable, of, zip} from 'rxjs';
     </div>
     <div mdbModal #photoModal="mdbModal" class="modal" tabindex="-1" role="dialog">
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-        <div class="modal-content">
-          <div [ngStyle]="{'height':photoHeight}">
-            <img class="photoImg" src="{{ photoImg }}"/>
-          </div>
-          <div class="modal-footer">
-          </div>
+        <div [ngStyle]="{'height': photoHeight}" style="position: relative; width: 100%;">
+          <img class="photoImg" style="width:100%;height:100%;object-fit: contain;position:absolute;" src="{{ photoImg }}"/>
         </div>
       </div>
     </div>
