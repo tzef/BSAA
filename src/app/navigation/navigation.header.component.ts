@@ -1,6 +1,7 @@
 import {Router} from '@angular/router';
 import {Component, OnDestroy} from '@angular/core';
 import {SettingService} from '../core/setting.service';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-header-component',
@@ -23,7 +24,7 @@ import {SettingService} from '../core/setting.service';
           <p class="text-left">管理者狀態<span style="font-size: 12px">(資料登打完畢記得登出)</span><a style="color: red" (click)="logout()"> [登出] </a></p>
         </ng-container>
       </div>
-      <div class="col-auto align-self-center mb-2 d-none d-sm-block">
+      <div class="col-auto align-self-center mb-2 d-none d-sm-block" *ngIf="isAuth$|async">
         <ng-container *ngIf="languageCode === 'zh'; else languageElseBlock1">
           <a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>
         </ng-container>
@@ -68,8 +69,12 @@ export class NavigationHeaderComponent implements OnDestroy {
   isLoggedIn = false;
   authSubscription;
   langSubscription;
+  isAuth$;
 
   constructor(private settingService: SettingService, private router: Router) {
+    this.isAuth$ = this.settingService.authState$.pipe(map(user => {
+      return user !== null;
+    }));
     this.authSubscription = this.settingService.authState$
       .subscribe(user => {
         this.isLoggedIn = (user !== null);

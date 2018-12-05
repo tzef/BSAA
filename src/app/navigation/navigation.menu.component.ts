@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy} from '@angular/core';
 import {SettingService} from '../core/setting.service';
 import {map} from 'rxjs/operators';
 
@@ -98,7 +98,7 @@ import {map} from 'rxjs/operators';
             <!--</ng-template>-->
           <!--</div>-->
         <!--</li>-->
-          <li class="nav-item dropdown" dropdown>
+          <li class="nav-item dropdown" dropdown *ngIf="isAuth$|async">
             <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
               {{ languageCode | i18nSelect:menuMap.database }}
             </a>

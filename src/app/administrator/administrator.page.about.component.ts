@@ -25,7 +25,7 @@ import {Router} from '@angular/router';
     <div class="container" style="margin-top: -50px">
       <div class="row">
         <div class="col">
-          <app-page-title-component title="關於協會"></app-page-title-component>
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.about }}"></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
@@ -228,6 +228,9 @@ import {Router} from '@angular/router';
 export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
   uploading = false;
   _uploadedImgUrl: string;
+  languageCode: string;
+  langSubscription;
+  menuMap;
   embedVideoUrl: SafeUrl;
   embedVideoUrlString = '';
   paragraphListSubscription;
@@ -247,7 +250,8 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
   set uploadedImgUrl(url: string) {
     if (this.uploadedImgUrl !== url) {
       this._uploadedImgUrl = url;
-      this.database.object('about/paragraphList/' + this.editingParagraph.key)
+      this.database
+        .object('about/paragraphList/' + this.languageCode + '/' + this.editingParagraph.key)
         .update({ content: this.editingParagraph.content, img : url })
         .then(_ => {
           this.uploading = false;
@@ -268,6 +272,21 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
               private settingService: SettingService,
               private router: Router, private sanitizer: DomSanitizer) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        if (this.paragraphListSubscription != null) {
+          this.paragraphListSubscription.unsubscribe();
+        }
+        this.paragraphListSubscription = this.database
+          .list('about/paragraphList/' + this.languageCode).snapshotChanges()
+          .subscribe(results => {
+            this.paragraphList = results.map(element => {
+              return new ParagraphModel(element.payload.val(), element.key);
+            });
+          });
+      });
+    this.menuMap = this.settingService.menuMap;
     this.getCarouselImageList();
   }
   ngOnInit() {
@@ -275,12 +294,6 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
       .pipe(map(element => {
         return element.payload.val() === true;
       }));
-    this.paragraphListSubscription = this.database.list('about/paragraphList').snapshotChanges()
-      .subscribe(results => {
-        this.paragraphList = results.map(element => {
-          return new ParagraphModel(element.payload.val(), element.key);
-        });
-      });
     this.embedVideoUrlSubscription = this.database.object('about/embedVideoUrl').snapshotChanges()
       .subscribe(results => {
         this.embedVideoUrlString = String(results.payload.val());
@@ -332,20 +345,21 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
       });
   }
   deleteParagraph() {
-    this.storage.ref('about/paragraphList/image_' + this.editingParagraph.key).delete();
-    this.database.object('about/paragraphList/' + this.editingParagraph.key).remove().then( _ => {
+    this.storage.ref('about/paragraphList/' + this.languageCode + '/' + 'image_' + this.editingParagraph.key).delete();
+    this.database.object('about/paragraphList/' + this.languageCode + '/'
+      + this.editingParagraph.key).remove().then( _ => {
       (document.getElementById('form-paragraph-close-btn') as HTMLElement).click();
     });
   }
   addParagraph(text: string) {
     if (this.inputImage) {
       this.uploading = true;
-      this.database.list('about/paragraphList')
+      this.database.list('about/paragraphList/' + this.languageCode)
         .push({content: text, img: 'imageUploading'})
         .then(result => {
           this.editingParagraph.content = text;
           this.editingParagraph.key = result.key;
-          const fileRef = 'about/paragraphList/image_' + result.key;
+          const fileRef = 'about/paragraphList/' + this.languageCode + '/' + 'image_' + result.key;
           const task = this.storage.upload(fileRef, this.inputImage);
           this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
             map((number) => {
@@ -369,7 +383,7 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
   updateParagraph(text: string) {
     if (this.inputImage) {
       this.uploading = true;
-      const fileRef = 'about/paragraphList/image_' + this.editingParagraph.key;
+      const fileRef = 'about/paragraphList/' + this.languageCode + '/' + 'image_' + this.editingParagraph.key;
       const task = this.storage.upload(fileRef, this.inputImage);
       this.editingParagraph.content = text;
       this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
@@ -387,7 +401,7 @@ export class AdministratorPageAboutComponent implements OnInit, OnDestroy {
         })
       );
     } else {
-      this.database.object('about/paragraphList/' + this.editingParagraph.key)
+      this.database.object('about/paragraphList/' + this.languageCode + '/' + this.editingParagraph.key)
         .update({ content: text })
         .then(_ => {
           this.uploading = false;

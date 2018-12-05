@@ -1,9 +1,9 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AngularFireStorage} from 'angularfire2/storage';
 import {SettingService} from '../core/setting.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {DomSanitizer} from '@angular/platform-browser';
 import {ArtistModel} from '../model/artist.model';
 
 @Component({
@@ -23,7 +23,7 @@ import {ArtistModel} from '../model/artist.model';
         <div class="col-xl-3 col-lg-3 col-md-3">
           <div class="row no-gutters">
             <ng-container *ngFor="let img of artist.imgList; let i = index">
-              <div class="col-4 mt-4" (click)="this.photoIndex=i; photoModal.show()">
+              <div class="col-4 mt-4" (click)="this.visible = false; this.showImage(); this.photoIndex=i; photoModal.show()">
                 <app-image-ratio-component image="{{ img.url }}" ratio="1:1">
                 </app-image-ratio-component>
               </div>
@@ -43,28 +43,33 @@ import {ArtistModel} from '../model/artist.model';
 
     <div mdbModal #photoModal="mdbModal" class="modal" tabindex="-1" role="dialog">
       <div class="row" style="position:relative; top: 50%">
-        <div class="col-1">
+        <div class="col-xl-1 col-2">
           <h1 class="float-right" (click)="previousPhoto()" *ngIf="this.photoIndex > 0">
             <i class="fa fa-chevron-left"></i>
           </h1>
         </div>
-        <div class="col-10"></div>
-        <div class="col-1">
+        <div class="col-xl-10 col-8"></div>
+        <div class="col-xl-1 col-2">
           <h1 (click)="nextPhoto()" *ngIf="this.photoIndex < this.artist.imgList.length - 1">
             <i class="fa fa-chevron-right"></i>
           </h1>
         </div>
       </div>
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document" *ngIf="this.artist.imgList.length > 0">
-        <div class="w-100 h-100" style="position:absolute; background-color: dimgray">
-          <img class="photoImg w-100" [ngStyle]="{'height' : photoHeight}" style="object-fit:contain;position:relative"
+        <div id="albumContainer" class="w-100 h-100" [ngClass]="visible ? 'visible' : 'invisible'"
+             style="position:absolute;text-align: center">
+          <img id="photoImage"
+               [ngStyle]="{'width':photoOriginWidth+'px','height':photoOriginHeight+'px','margin-top':photoTop+'px'}"
+               style="object-fit:contain;position:relative"
                src="{{artist.imgList[photoIndex].url}}"/>
-          <div style="position:relative; padding-left: 10px; padding-right: 10px">
+          <div [ngStyle]="{'width':photoOriginWidth+'px'}"
+               style="position:relative; padding-left: 10px; padding-right: 10px; margin:auto; background-color: #000000AA">
             <ng-container *ngFor="let text of artist.imgList[photoIndex].note|stringNewLine">
-              <p style="color: #ffffff">{{ text }}</p>
+              <p style="color: #ffffff; text-align: center">{{ text }}</p>
             </ng-container>
           </div>
         </div>
+        {{getImageRatio()}}
       </div>
     </div>
   `
@@ -74,9 +79,12 @@ export class PageDatabaseArtistDetailComponent implements OnInit, OnDestroy {
   private artistSubscription;
   private _id: string;
 
-  photoIndex = 0;
   artist = new ArtistModel('', '');
-  photoHeight = (window.screen.height * 0.8 - 100) + 'px';
+  photoOriginHeight = 0;
+  photoOriginWidth = 0;
+  photoIndex = 0;
+  photoTop = 0;
+  visible = false;
 
   @Input()
   set id(id: string) {
@@ -102,6 +110,31 @@ export class PageDatabaseArtistDetailComponent implements OnInit, OnDestroy {
     this.settingService.path$.next(this.router.url);
   }
 
+  async delay(duration: number) {
+    return new Promise((resolve, reject) => {
+      setTimeout(resolve, duration);
+    });
+  }
+  async showImage() {
+    console.log('showImage start');
+    await this.delay(300);
+    this.visible = true;
+    console.log('showImage end');
+  }
+
+  getImageRatio() {
+    const albumHeight = (document.getElementById('albumContainer') as HTMLElement).clientHeight;
+    const albumWidth = (document.getElementById('albumContainer') as HTMLElement).clientWidth;
+    const photoImage = (document.getElementById('photoImage') as HTMLImageElement);
+    this.photoOriginHeight = photoImage.naturalHeight;
+    this.photoOriginWidth = photoImage.naturalWidth;
+    if (this.photoOriginWidth > (albumWidth - 100)) {
+      const ratio = this.photoOriginHeight / this.photoOriginWidth;
+      this.photoOriginHeight = (albumWidth - 100) * ratio;
+      this.photoOriginWidth = (albumWidth - 100);
+    }
+    this.photoTop = (albumHeight - this.photoOriginHeight) / 2;
+  }
   nextPhoto() {
     this.photoIndex += 1;
   }

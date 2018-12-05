@@ -14,7 +14,7 @@ import {Router} from '@angular/router';
     <div class="container" style="margin-top: -50px">
       <div class="row">
         <div class="col">
-          <app-page-title-component title="關於協會"></app-page-title-component>
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.about }}"></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
@@ -88,12 +88,30 @@ export class PageAboutComponent implements OnInit, OnDestroy {
   embedVideoUrlSubscription;
   embedVideoUrlString = '';
   embedVideoUrl: SafeUrl;
+  languageCode: string;
+  langSubscription;
+  menuMap;
 
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router, private sanitizer: DomSanitizer) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        if (this.paragraphListSubscription != null) {
+          this.paragraphListSubscription.unsubscribe();
+        }
+        this.paragraphListSubscription = this.database
+          .list('about/paragraphList/' + this.languageCode).snapshotChanges()
+          .subscribe(results => {
+            this.paragraphList = results.map(element => {
+              return new ParagraphModel(element.payload.val(), element.key);
+            });
+          });
+      });
+    this.menuMap = this.settingService.menuMap;
     this.getCarouselImageList();
   }
   ngOnInit() {
@@ -101,12 +119,6 @@ export class PageAboutComponent implements OnInit, OnDestroy {
       .pipe(map(element => {
         return element.payload.val() === true;
       }));
-    this.paragraphListSubscription = this.database.list('about/paragraphList').snapshotChanges()
-      .subscribe(results => {
-        this.paragraphList = results.map(element => {
-          return new ParagraphModel(element.payload.val(), element.key);
-        });
-      });
     this.embedVideoUrlSubscription = this.database.object('about/embedVideoUrl').snapshotChanges()
       .subscribe(results => {
         this.embedVideoUrlString = String(results.payload.val());
@@ -118,6 +130,7 @@ export class PageAboutComponent implements OnInit, OnDestroy {
       });
   }
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.paragraphListSubscription.unsubscribe();
     this.embedVideoUrlSubscription.unsubscribe();
   }
