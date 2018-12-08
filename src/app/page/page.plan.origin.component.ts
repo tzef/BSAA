@@ -78,12 +78,30 @@ export class PagePlanOriginComponent implements OnInit, OnDestroy {
   enableFormCurrent$: Observable<boolean>;
   paragraphList: ParagraphModel[] = [];
   paragraphListSubscription;
+  languageCode: string;
+  langSubscription;
+  menuMap;
 
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        if (this.paragraphListSubscription != null) {
+          this.paragraphListSubscription.unsubscribe();
+        }
+        this.paragraphListSubscription = this.database
+          .list('plan/origin/paragraphList/' + this.languageCode).snapshotChanges()
+          .subscribe(results => {
+            this.paragraphList = results.map(element => {
+              return new ParagraphModel(element.payload.val(), element.key);
+            });
+          });
+      });
+    this.menuMap = this.settingService.menuMap;
     this.getCarouselImageList();
   }
   ngOnInit() {
@@ -91,14 +109,9 @@ export class PagePlanOriginComponent implements OnInit, OnDestroy {
       .pipe(map(element => {
         return element.payload.val() === true;
       }));
-    this.paragraphListSubscription = this.database.list('plan/origin/paragraphList').snapshotChanges()
-      .subscribe(results => {
-        this.paragraphList = results.map(element => {
-          return new ParagraphModel(element.payload.val(), element.key);
-        });
-      });
   }
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.paragraphListSubscription.unsubscribe();
   }
 
