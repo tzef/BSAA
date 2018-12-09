@@ -104,7 +104,7 @@ export class PagePlanCurrentComponent implements OnInit, OnDestroy {
           this.paragraphListSubscription.unsubscribe();
         }
         this.paragraphListSubscription = this.database
-          .list('plan/current/paragraphList' + this.languageCode).snapshotChanges()
+          .list('plan/current/paragraphList/' + this.languageCode).snapshotChanges()
           .subscribe(results => {
             this.paragraphList = results.map(element => {
               return new ParagraphModel(element.payload.val(), element.key);
