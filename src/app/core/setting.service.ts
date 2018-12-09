@@ -44,7 +44,7 @@ export class SettingService {
         'zh' : '活動預告',
       },
       schoolGallery : {
-        'en' : '歷屆花絮_En',
+        'en' : 'Sidelights',
         'zh' : '歷屆花絮',
       },
       art : {

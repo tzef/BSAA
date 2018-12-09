@@ -11,7 +11,8 @@ import {Observable} from 'rxjs';
 @Component({
   template: `
     <div class="container">
-      <app-page-title-component title="歷屆花絮 - {{ gallery.title }}" topImage=false></app-page-title-component>
+      <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.schoolGallery }} - {{ gallery.getTitle(this.languageCode) }}"
+                                topImage=false></app-page-title-component>
       <div class="row no-gutters">
         <ng-container *ngFor="let image of gallery.imgList">
           <div class="col-md-2 col-sm-4 col-6 mt-4">
@@ -92,6 +93,10 @@ export class AdministratorPageSchoolGalleryDetailComponent implements OnInit, On
   newImg = new ImageModel(0, '', '', '');
   editingImg = new ImageModel(0, '', '', '');
 
+  languageCode: string;
+  langSubscription;
+  menuMap;
+
   @Input()
   set id(id: string) {
     this._id = id;
@@ -139,6 +144,11 @@ export class AdministratorPageSchoolGalleryDetailComponent implements OnInit, On
               private router: Router,
               private route: ActivatedRoute) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+      });
+    this.menuMap = this.settingService.menuMap;
   }
 
   addImg() {
@@ -208,6 +218,7 @@ export class AdministratorPageSchoolGalleryDetailComponent implements OnInit, On
   }
 
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
     this.gallerySubscription.unsubscribe();
   }

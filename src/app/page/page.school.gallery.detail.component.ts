@@ -12,7 +12,8 @@ import {flatMap} from 'rxjs/operators';
   template: `
     <div class="container">
       <div id="container">
-        <app-page-title-component title="歷屆花絮 - {{ gallery.title }}" topImage=false></app-page-title-component>
+        <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.schoolGallery }} - {{ gallery.getTitle(this.languageCode) }}"
+                                  topImage=false></app-page-title-component>
         <div class="mt-5">
           <ks-modal-gallery [modalImages]="galleryImages" [plainGalleryConfig]="plainGalleryGrid">
           </ks-modal-gallery>
@@ -35,6 +36,10 @@ export class PageSchoolGalleryDetailComponent implements OnInit, OnDestroy {
       { length: 6, wrap: true }),
     advanced: { aTags: true, additionalBackground: '50% 50%/cover' }
   };
+
+  languageCode: string;
+  langSubscription;
+  menuMap;
 
   @Input()
   set id(id: string) {
@@ -86,6 +91,11 @@ export class PageSchoolGalleryDetailComponent implements OnInit, OnDestroy {
               private router: Router,
               private route: ActivatedRoute) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+      });
+    this.menuMap = this.settingService.menuMap;
   }
 
   ngOnInit() {
@@ -97,6 +107,7 @@ export class PageSchoolGalleryDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
     this.gallerySubscription.unsubscribe();
   }

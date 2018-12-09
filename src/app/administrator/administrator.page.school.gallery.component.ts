@@ -10,7 +10,7 @@ import {Router} from '@angular/router';
 @Component({
   template: `
     <div class="container">
-      <app-page-title-component title="歷屆花絮" topImage=false></app-page-title-component>
+      <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.schoolGallery }}" topImage=false></app-page-title-component>
     </div>
     <ng-container *ngFor="let gallery of galleryList; let i = index">
       <ng-container *ngIf="i % 2 === 0">
@@ -41,9 +41,9 @@ import {Router} from '@angular/router';
                   </a>
                 </div>
                 <div class="col-md-6">
-                  <h2>{{ gallery.title }}</h2>
-                  <strong>{{ gallery.subTitle }}</strong>
-                  <div *ngFor="let text of gallery.content|stringNewLine">
+                  <h2>{{ gallery.getTitle(this.languageCode) }}</h2>
+                  <strong>{{ gallery.getSubTitle(this.languageCode) }}</strong>
+                  <div *ngFor="let text of gallery.getContent(this.languageCode)|stringNewLine">
                     {{ text }}<br>
                   </div>
                 </div>
@@ -58,9 +58,9 @@ import {Router} from '@angular/router';
                   </a>
                 </div>
                 <div class="col-md-6">
-                  <h2>{{ galleryList[i + 1].title }}</h2>
-                  <strong>{{ galleryList[i + 1].subTitle }}</strong>
-                  <div *ngFor="let text of galleryList[i + 1].content|stringNewLine">
+                  <h2>{{ galleryList[i + 1].getTitle(this.languageCode) }}</h2>
+                  <strong>{{ galleryList[i + 1].getSubTitle(this.languageCode) }}</strong>
+                  <div *ngFor="let text of galleryList[i + 1].getContent(this.languageCode)|stringNewLine">
                     {{ text }}<br>
                   </div>
                 </div>
@@ -95,11 +95,11 @@ import {Router} from '@angular/router';
           <div class="modal-body mb-0">
             <div class="md-form form-sm">
               <input #title type="text" class="form-control"
-                     placeholder="標題" value="{{ editingGallery.title }}">
+                     placeholder="標題" value="{{ editingGallery.getTitle(this.languageCode) }}">
             </div>
             <div class="md-form form-sm">
               <input #subTitle type="text" class="form-control"
-                     placeholder="副標題" value="{{ editingGallery.subTitle }}">
+                     placeholder="副標題" value="{{ editingGallery.getSubTitle(this.languageCode) }}">
             </div>
             <div class="md-form form-sm">
               <input #date type="date" class="form-control"
@@ -113,7 +113,7 @@ import {Router} from '@angular/router';
                 </div>
                 <div class="col-8">
                   <textarea #content mdbInputDirective type="text"
-                            class="md-textarea form-control" rows="2" value="{{ editingGallery.content }}"></textarea>
+                            class="md-textarea form-control" rows="2" value="{{ editingGallery.getContent(this.languageCode) }}"></textarea>
                 </div>
               </div>
               <input #fileInput mdbInputDirective type="file" class="form-control" (change)="this.inputImage = $event.target.files[0]">
@@ -144,23 +144,32 @@ import {Router} from '@angular/router';
 })
 export class AdministratorPageSchoolGalleryComponent implements OnDestroy {
   uploading = false;
-  newGallery = new GalleryModel('', '');
-  editingGallery = new GalleryModel('', '');
-  gallerySubscription: Subscription;
   galleryList: GalleryModel[];
   inputImage: HTMLInputElement;
   uploadPercent: Observable<string>;
+  gallerySubscription: Subscription;
+  newGallery = new GalleryModel('', '');
+  editingGallery = new GalleryModel('', '');
+
+  languageCode: string;
+  langSubscription;
+  menuMap;
+
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router) {
     this.settingService.path$.next(this.router.url);
-    this.getInfo();
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        this.getInfo();
+      });
+    this.menuMap = this.settingService.menuMap;
   }
   ngOnDestroy () {
-    if (this.gallerySubscription) {
-      this.gallerySubscription.unsubscribe();
-    }
+    this.langSubscription.unsubscribe();
+    this.gallerySubscription.unsubscribe();
   }
   getInfo() {
     if (this.gallerySubscription) {
@@ -183,6 +192,17 @@ export class AdministratorPageSchoolGalleryComponent implements OnDestroy {
         latestKey = Number(model.key);
       }
     }
+    const json = {date: date};
+    if (this.languageCode === 'zh') {
+      json['title_zh'] = title;
+      json['content_zh'] = content;
+      json['subTitle_zh'] = subTitle;
+    }
+    if (this.languageCode === 'en') {
+      json['title_en'] = title;
+      json['content_en'] = content;
+      json['subTitle_en'] = subTitle;
+    }
     if (this.inputImage) {
       this.uploading = true;
       const fileRef = 'school/gallery/image_' + (latestKey + 1);
@@ -195,8 +215,9 @@ export class AdministratorPageSchoolGalleryComponent implements OnDestroy {
               .pipe(delay(1000))
               .pipe(retry(2))
               .subscribe(value => {
+                json['imgUrl'] = value;
                 this.database.object('school/gallery/' + (latestKey + 1))
-                  .set({ title: title, subTitle: subTitle, content: content, imgUrl: value, date: date })
+                  .set(json)
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -211,6 +232,17 @@ export class AdministratorPageSchoolGalleryComponent implements OnDestroy {
     }
   }
   update(date: string, title: string, subTitle: string, content: string, key: string) {
+    const json = {date: date};
+    if (this.languageCode === 'zh') {
+      json['title_zh'] = title;
+      json['content_zh'] = content;
+      json['subTitle_zh'] = subTitle;
+    }
+    if (this.languageCode === 'en') {
+      json['title_en'] = title;
+      json['content_en'] = content;
+      json['subTitle_en'] = subTitle;
+    }
     if (this.inputImage) {
       this.uploading = true;
       const fileRef = 'school/gallery/image_' + key;
@@ -223,8 +255,9 @@ export class AdministratorPageSchoolGalleryComponent implements OnDestroy {
               .pipe(delay(1000))
               .pipe(retry(2))
               .subscribe(value => {
+                json['imgUrl'] = value;
                 this.database.object('school/gallery/' + key)
-                  .update({ title: title, subTitle: subTitle, content: content, imgUrl: value, date: date })
+                  .update(json)
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -236,7 +269,7 @@ export class AdministratorPageSchoolGalleryComponent implements OnDestroy {
       );
     } else {
       this.database.object('school/gallery/' + key)
-        .update({ title: title, subTitle: subTitle, content: content, date: date })
+        .update(json)
         .then(_ => {
           (document.getElementById('form-edit-close-btn') as HTMLElement).click();
         });

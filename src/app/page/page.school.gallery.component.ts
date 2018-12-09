@@ -10,7 +10,7 @@ import {Subscription} from 'rxjs';
 @Component({
   template: `
     <div class="container">
-      <app-page-title-component title="歷屆花絮" topImage=false></app-page-title-component>
+      <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.schoolGallery }}" topImage=false></app-page-title-component>
     </div>
     <ng-container *ngFor="let gallery of galleryList; let i = index">
       <ng-container *ngIf="i % 2 === 0">
@@ -25,9 +25,9 @@ import {Subscription} from 'rxjs';
                   </a>
                 </div>
                 <div class="col-md-6">
-                  <h2>{{ gallery.title }}</h2>
-                  <strong>{{ gallery.subTitle }}</strong>
-                  <div *ngFor="let text of gallery.content|stringNewLine">
+                  <h2>{{ gallery.getTitle(this.languageCode) }}</h2>
+                  <strong>{{ gallery.getSubTitle(this.languageCode) }}</strong>
+                  <div *ngFor="let text of gallery.getContent(this.languageCode)|stringNewLine">
                     {{ text }}<br>
                   </div>
                 </div>
@@ -42,9 +42,9 @@ import {Subscription} from 'rxjs';
                   </a>
                 </div>
                 <div class="col-md-6">
-                  <h2>{{ galleryList[i + 1].title }}</h2>
-                  <strong>{{ galleryList[i + 1].subTitle }}</strong>
-                  <div *ngFor="let text of galleryList[i + 1].content|stringNewLine">
+                  <h2>{{ galleryList[i + 1].getTitle(this.languageCode) }}</h2>
+                  <strong>{{ galleryList[i + 1].getSubTitle(this.languageCode) }}</strong>
+                  <div *ngFor="let text of galleryList[i + 1].getContent(this.languageCode)|stringNewLine">
                     {{ text }}<br>
                   </div>
                 </div>
@@ -58,20 +58,27 @@ import {Subscription} from 'rxjs';
   `
 })
 export class PageSchoolGalleryComponent implements OnDestroy {
-  galleryList: GalleryModel[];
   gallerySubscription: Subscription;
+  galleryList: GalleryModel[];
+  languageCode: string;
+  langSubscription;
+  menuMap;
 
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router) {
     this.settingService.path$.next(this.router.url);
-    this.getInfo();
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        this.getInfo();
+      });
+    this.menuMap = this.settingService.menuMap;
   }
   ngOnDestroy () {
-    if (this.gallerySubscription) {
-      this.gallerySubscription.unsubscribe();
-    }
+    this.langSubscription.unsubscribe();
+    this.gallerySubscription.unsubscribe();
   }
   getInfo() {
     if (this.gallerySubscription) {

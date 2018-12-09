@@ -3,9 +3,9 @@ import {ParagraphModel} from './paragraph.model';
 export class HistoryModel {
   key: string;
   date: string;
+  imgUrl: string;
   title_zh: string;
   title_en: string;
-  imgUrl: string;
   content_zh: string;
   content_en: string;
   subTitle_zh: string;
@@ -15,9 +15,9 @@ export class HistoryModel {
   constructor(json, key = null) {
     this.key = key;
     this.date = json.date ? json.date : '';
+    this.imgUrl = json.imgUrl ? json.imgUrl : '';
     this.title_zh = json.title_zh ? json.title_zh : '';
     this.title_en = json.title_en ? json.title_en : '';
-    this.imgUrl = json.imgUrl ? json.imgUrl : '';
     this.content_zh = json.content_zh ? json.content_zh : '';
     this.content_en = json.content_en ? json.content_en : '';
     this.subTitle_zh = json.subTitle_zh ? json.subTitle_zh : '';
