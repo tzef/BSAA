@@ -1,8 +1,8 @@
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {AngularFireDatabase} from 'angularfire2/database';
 import {AngularFireStorage} from 'angularfire2/storage';
 import {SettingService} from '../core/setting.service';
 import {HistoryModel} from '../model/history.model';
-import {Component, OnDestroy} from '@angular/core';
 import {delay, map, retry} from 'rxjs/operators';
 import {Observable, Subscription} from 'rxjs';
 import {Router} from '@angular/router';
@@ -12,11 +12,11 @@ import {Router} from '@angular/router';
     <div class="container">
       <div class="row">
         <div class="col">
-          <app-page-title-component title="歷屆炫光" topImage=false></app-page-title-component>
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planHistory }}" topImage=false></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
-                  routerLink="/plan/form">報名本屆炫光</button>
+                  routerLink="/plan/form">{{ languageCode | i18nSelect:menuMap.application }}</button>
         </div>
       </div>
     </div>
@@ -42,9 +42,9 @@ import {Router} from '@angular/router';
             </a>
           </div>
           <div class="col-md-4 col-sm-12">
-            <h2>{{ history.title }}</h2>
-            <strong>{{ history.subTitle }}</strong>
-            <div *ngFor="let text of history.content|stringNewLine">
+            <h2>{{ history.getTitle(this.languageCode) }}</h2>
+            <strong>{{ history.getSubTitle(this.languageCode) }}</strong>
+            <div *ngFor="let text of history.getContent(this.languageCode)|stringNewLine">
               {{ text }}<br>
             </div>
           </div>
@@ -77,11 +77,11 @@ import {Router} from '@angular/router';
           <div class="modal-body mb-0">
             <div class="md-form form-sm">
               <input #title type="text" class="form-control"
-                     placeholder="標題" value="{{ editingHistory.title }}">
+                     placeholder="標題" value="{{ editingHistory.getTitle(this.languageCode) }}">
             </div>
             <div class="md-form form-sm">
               <input #subTitle type="text" class="form-control"
-                     placeholder="副標題" value="{{ editingHistory.subTitle }}">
+                     placeholder="副標題" value="{{ editingHistory.getSubTitle(this.languageCode) }}">
             </div>
             <div class="md-form form-sm">
               <input #date type="date" class="form-control" placeholder="時間" value="{{ editingHistory.date }}">
@@ -94,7 +94,7 @@ import {Router} from '@angular/router';
                 </div>
                 <div class="col-8">
                   <textarea #content mdbInputDirective type="text"
-                            class="md-textarea form-control" rows="2" value="{{ editingHistory.content }}"></textarea>
+                            class="md-textarea form-control" rows="2" value="{{ editingHistory.getContent(this.languageCode) }}"></textarea>
                 </div>
               </div>
               <input #fileInput mdbInputDirective type="file" class="form-control" (change)="this.inputImage = $event.target.files[0]">
@@ -123,30 +123,41 @@ import {Router} from '@angular/router';
     </div>
   `
 })
-export class AdministratorPagePlanHistoryComponent implements OnDestroy {
+export class AdministratorPagePlanHistoryComponent implements OnInit, OnDestroy {
   uploading = false;
-  newHistory = new HistoryModel('', '');
-  editingHistory = new HistoryModel('', '');
-  historySubscription: Subscription;
   historyList: HistoryModel[];
   inputImage: HTMLInputElement;
   uploadPercent: Observable<string>;
+  historySubscription: Subscription;
   enableFormCurrent$: Observable<boolean>;
+  newHistory = new HistoryModel('', '');
+  editingHistory = new HistoryModel('', '');
+
+  languageCode: string;
+  langSubscription;
+  menuMap;
+
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router) {
+    this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        this.getInfo();
+      });
+    this.menuMap = this.settingService.menuMap;
+  }
+  ngOnInit() {
     this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
       .pipe(map(element => {
         return element.payload.val() === true;
       }));
-    this.settingService.path$.next(this.router.url);
-    this.getInfo();
   }
   ngOnDestroy () {
-    if (this.historySubscription) {
-      this.historySubscription.unsubscribe();
-    }
+    this.langSubscription.unsubscribe();
+    this.historySubscription.unsubscribe();
   }
   getInfo() {
     if (this.historySubscription) {
@@ -169,6 +180,17 @@ export class AdministratorPagePlanHistoryComponent implements OnDestroy {
         latestKey = Number(model.key);
       }
     }
+    const json = {date: date};
+    if (this.languageCode === 'zh') {
+      json['title_zh'] = title;
+      json['content_zh'] = content;
+      json['subTitle_zh'] = subTitle;
+    }
+    if (this.languageCode === 'en') {
+      json['title_en'] = title;
+      json['content_en'] = content;
+      json['subTitle_en'] = subTitle;
+    }
     if (this.inputImage) {
       this.uploading = true;
       const fileRef = 'plan/history/image_' + (latestKey + 1);
@@ -181,8 +203,9 @@ export class AdministratorPagePlanHistoryComponent implements OnDestroy {
               .pipe(delay(1000))
               .pipe(retry(2))
               .subscribe(value => {
+                json['imgUrl'] = value;
                 this.database.object('plan/history/' + (latestKey + 1))
-                  .set({title: title, subTitle: subTitle, content: content, imgUrl: value, date: date})
+                  .set(json)
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -197,6 +220,17 @@ export class AdministratorPagePlanHistoryComponent implements OnDestroy {
     }
   }
   update(date: string, title: string, subTitle: string, content: string, key: string) {
+    const json = {date: date};
+    if (this.languageCode === 'zh') {
+      json['title_zh'] = title;
+      json['content_zh'] = content;
+      json['subTitle_zh'] = subTitle;
+    }
+    if (this.languageCode === 'en') {
+      json['title_en'] = title;
+      json['content_en'] = content;
+      json['subTitle_en'] = subTitle;
+    }
     if (this.inputImage) {
       this.uploading = true;
       const fileRef = 'plan/history/image_' + key;
@@ -209,8 +243,9 @@ export class AdministratorPagePlanHistoryComponent implements OnDestroy {
               .pipe(delay(1000))
               .pipe(retry(2))
               .subscribe(value => {
+                json['imgUrl'] = value;
                 this.database.object('plan/history/' + key)
-                  .update({title: title, subTitle: subTitle, content: content, imgUrl: value, date: date})
+                  .update(json)
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -222,7 +257,7 @@ export class AdministratorPagePlanHistoryComponent implements OnDestroy {
       );
     } else {
       this.database.object('plan/history/' + key)
-        .update({title: title, subTitle: subTitle, content: content, date: date})
+        .update(json)
         .then(_ => {
           (document.getElementById('form-edit-close-btn') as HTMLElement).click();
         });

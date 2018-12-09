@@ -24,7 +24,7 @@ import {Router} from '@angular/router';
     <div class="container" style="margin-top: -50px">
       <div class="row">
         <div class="col">
-          <app-page-title-component title="本屆炫光"></app-page-title-component>
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planCurrent }}"></app-page-title-component>
         </div>
         <ng-container *ngIf="enableFormCurrent$|async; else formButtonElseBlock">
           <div class="col mt-3" style="text-align: right">
@@ -224,11 +224,15 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
   inputImage: HTMLInputElement;
   uploading = false;
 
+  languageCode: string;
+  langSubscription;
+  menuMap;
+
   @Input()
   set uploadedImgUrl(url: string) {
     if (this.uploadedImgUrl !== url) {
       this._uploadedImgUrl = url;
-      this.database.object('plan/current/paragraphList/' + this.editingParagraph.key)
+      this.database.object('plan/current/paragraphList/' + this.languageCode + '/' + this.editingParagraph.key)
         .update({ content: this.editingParagraph.content, img : url })
         .then(_ => {
           this.uploading = false;
@@ -249,6 +253,21 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
               private settingService: SettingService,
               private router: Router) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        if (this.paragraphListSubscription != null) {
+          this.paragraphListSubscription.unsubscribe();
+        }
+        this.paragraphListSubscription = this.database
+          .list('plan/current/paragraphList/' + this.languageCode).snapshotChanges()
+          .subscribe(results => {
+            this.paragraphList = results.map(element => {
+              return new ParagraphModel(element.payload.val(), element.key);
+            });
+          });
+      });
+    this.menuMap = this.settingService.menuMap;
     this.getCarouselImageList();
   }
   ngOnInit() {
@@ -256,14 +275,9 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
       .pipe(map(element => {
         return element.payload.val() === true;
       }));
-    this.paragraphListSubscription = this.database.list('plan/current/paragraphList').snapshotChanges()
-      .subscribe(results => {
-        this.paragraphList = results.map(element => {
-          return new ParagraphModel(element.payload.val(), element.key);
-        });
-      });
   }
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.paragraphListSubscription.unsubscribe();
   }
 
@@ -300,20 +314,21 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
       });
   }
   deleteParagraph() {
-    this.storage.ref('plan/current/paragraphList/image_' + this.editingParagraph.key).delete();
-    this.database.object('plan/current/paragraphList/' + this.editingParagraph.key).remove().then( _ => {
+    this.storage.ref('plan/current/paragraphList/' + this.languageCode + '/' + 'image_' + this.editingParagraph.key).delete();
+    this.database.object('plan/current/paragraphList/' + this.languageCode + '/'
+      + this.editingParagraph.key).remove().then( _ => {
       (document.getElementById('form-paragraph-close-btn') as HTMLElement).click();
     });
   }
   addParagraph(text: string) {
     if (this.inputImage) {
       this.uploading = true;
-      this.database.list('plan/current/paragraphList')
+      this.database.list('plan/current/paragraphList/' + this.languageCode)
         .push({content: text, img: 'imageUploading'})
         .then(result => {
           this.editingParagraph.content = text;
           this.editingParagraph.key = result.key;
-          const fileRef = 'plan/current/paragraphList/image_' + result.key;
+          const fileRef = 'plan/current/paragraphList/' + this.languageCode + '/' + 'image_' + result.key;
           const task = this.storage.upload(fileRef, this.inputImage);
           this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
             map((number) => {
@@ -337,7 +352,7 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
   updateParagraph(text: string) {
     if (this.inputImage) {
       this.uploading = true;
-      const fileRef = 'plan/current/paragraphList/image_' + this.editingParagraph.key;
+      const fileRef = 'plan/current/paragraphList/' + this.languageCode + '/' + 'image_' + this.editingParagraph.key;
       const task = this.storage.upload(fileRef, this.inputImage);
       this.editingParagraph.content = text;
       this.uploadPercent = task.percentageChanges().pipe(delay(1000)).pipe(
@@ -355,7 +370,7 @@ export class AdministratorPagePlanCurrentComponent implements OnInit, OnDestroy 
         })
       );
     } else {
-      this.database.object('plan/current/paragraphList/' + this.editingParagraph.key)
+      this.database.object('plan/current/paragraphList/' + this.languageCode + '/' + this.editingParagraph.key)
         .update({ content: text })
         .then(_ => {
           this.uploading = false;

@@ -13,7 +13,8 @@ import {Observable, of, zip} from 'rxjs';
   template: `
     <app-carousel-main-component editMode="true" [imageList]=this.carouselImageList|async></app-carousel-main-component>
     <div class="container" style="margin-top: -50px">
-      <app-page-title-component title="歷屆炫光 - {{ history.title }}"></app-page-title-component>
+      <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planHistory }} - {{ history.getTitle(this.languageCode) }}">
+      </app-page-title-component>
     </div>
     <ng-container *ngFor="let paragraph of history.paragraphList; let i = index">
       <div class="container">
@@ -22,7 +23,7 @@ import {Observable, of, zip} from 'rxjs';
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
                 <div class="col-12" (click)="this.photoImg=paragraph.img; photoModal.show()">
-                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
+                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.getTitle(this.languageCode) }}">
                   </app-image-ratio-component>
                 </div>
                 <div class="col-12">
@@ -47,7 +48,7 @@ import {Observable, of, zip} from 'rxjs';
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
                 <div class="col-12" (click)="this.photoImg=paragraph.img; photoModal.show()">
-                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
+                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.getTitle(this.languageCode) }}">
                   </app-image-ratio-component>
                 </div>
                 <div class="col-12" style="text-align: right">
@@ -103,6 +104,10 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
   photoHeight = window.screen.height * 0.8 + 'px';
   photoImg: string;
 
+  languageCode: string;
+  langSubscription;
+  menuMap;
+
   @Input()
   set id(id: string) {
     this._id = id;
@@ -141,6 +146,11 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private sanitizer: DomSanitizer) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+      });
+    this.menuMap = this.settingService.menuMap;
   }
   ngOnInit() {
     this.routerSubscription = this.route
@@ -151,6 +161,7 @@ export class PagePlanHistoryDetailComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
     this.historySubscription.unsubscribe();
     this.embedVideoUrlSubscription.unsubscribe();

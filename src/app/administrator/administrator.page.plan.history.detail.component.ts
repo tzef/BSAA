@@ -13,7 +13,8 @@ import {Observable, of, zip} from 'rxjs';
   template: `
     <app-carousel-main-component editMode="true" [imageList]=this.carouselImageList|async></app-carousel-main-component>
     <div class="container" style="margin-top: -50px">
-      <app-page-title-component title="歷屆炫光 - {{ history.title }}"></app-page-title-component>
+      <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planHistory }} - {{ history.getTitle(this.languageCode) }}">
+      </app-page-title-component>
     </div>
     <ng-container *ngFor="let paragraph of history.paragraphList; let i = index">
       <div class="container-fluid" style="position: absolute; z-index: 1">
@@ -33,7 +34,7 @@ import {Observable, of, zip} from 'rxjs';
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
                 <div class="col-12">
-                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
+                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.getTitle(this.languageCode) }}">
                   </app-image-ratio-component>
                 </div>
                 <div class="col-12">
@@ -58,7 +59,7 @@ import {Observable, of, zip} from 'rxjs';
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
                 <div class="col-12">
-                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.title }}">
+                  <app-image-ratio-component image="{{ paragraph.img }}" ratio="1:1" alt="歷屆炫光 - {{ history.getTitle(this.languageCode) }}">
                   </app-image-ratio-component>
                 </div>
                 <div class="col-12" style="text-align: right">
@@ -103,7 +104,7 @@ import {Observable, of, zip} from 'rxjs';
       <div class="modal-dialog cascading-modal" role="document">
         <div class="modal-content">
           <div class="modal-header light-blue darken-3 white-text">
-            <h4 class="title"><i class="fa fa-pencil"></i> 歷屆炫光 - {{ history.title }} 內容編輯 </h4>
+            <h4 class="title"><i class="fa fa-pencil"></i> 歷屆炫光 - {{ history.getTitle(this.languageCode) }} 內容編輯 </h4>
             <button id="form-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
                     (click)="form_paragraph.hide()">
               <span>×</span>
@@ -150,7 +151,7 @@ import {Observable, of, zip} from 'rxjs';
       <div class="modal-dialog cascading-modal" role="document">
         <div class="modal-content">
           <div class="modal-header light-blue darken-3 white-text">
-            <h4 class="title"><i class="fa fa-pencil"></i> 歷屆炫光 {{ history.title }} 嵌入影片 編輯 </h4>
+            <h4 class="title"><i class="fa fa-pencil"></i> 歷屆炫光 {{ history.getTitle(this.languageCode) }} 嵌入影片 編輯 </h4>
             <button id="form-iframe-close-btn" type="button" class="close waves-effect waves-light" data-dismiss="modal"
                     (click)="form_iframe.hide()">
               <span>×</span>
@@ -188,6 +189,10 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
   embedVideoUrlString = '';
   embedVideoUrl: SafeUrl;
   uploading = false;
+
+  languageCode: string;
+  langSubscription;
+  menuMap;
 
   @Input()
   set id(id: string) {
@@ -247,6 +252,11 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
               private route: ActivatedRoute,
               private sanitizer: DomSanitizer) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+      });
+    this.menuMap = this.settingService.menuMap;
   }
   addParagraph(text: string) {
     if (this.inputImage) {
@@ -331,6 +341,7 @@ export class AdministratorPagePlanHistoryDetailComponent implements OnInit, OnDe
   }
 
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.routerSubscription.unsubscribe();
     this.historySubscription.unsubscribe();
     this.embedVideoUrlSubscription.unsubscribe();

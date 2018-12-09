@@ -13,11 +13,11 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
     <div class="container" style="margin-top: -50px">
       <div class="row">
         <div class="col">
-          <app-page-title-component title="炫光緣起"></app-page-title-component>
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planOrigin }}"></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
-                  routerLink="/plan/form">報名本屆炫光</button>
+                  routerLink="/plan/form">{{ languageCode | i18nSelect:menuMap.application }}</button>
         </div>
       </div>
     </div>

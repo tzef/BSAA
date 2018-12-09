@@ -1,22 +1,23 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Router} from '@angular/router';
-import {AngularFireStorage} from 'angularfire2/storage';
-import {SettingService} from '../core/setting.service';
-import {AngularFireDatabase} from 'angularfire2/database';
-import {HistoryModel} from '../model/history.model';
-import {Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {Router} from '@angular/router';
+import {Observable, Subscription} from 'rxjs';
+import {HistoryModel} from '../model/history.model';
+import {SettingService} from '../core/setting.service';
+import {AngularFireStorage} from 'angularfire2/storage';
+import {AngularFireDatabase} from 'angularfire2/database';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+
 
 @Component({
   template: `
     <div class="container">
       <div class="row">
         <div class="col">
-          <app-page-title-component title="歷屆炫光" topImage=false></app-page-title-component>
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planHistory }}" topImage=false></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
-                  routerLink="/plan/form">報名本屆炫光</button>
+                  routerLink="/plan/form">{{ languageCode | i18nSelect:menuMap.application }}</button>
         </div>
       </div>
     </div>
@@ -30,9 +31,9 @@ import {map} from 'rxjs/operators';
             </a>
           </div>
           <div class="col-md-4 col-sm-12">
-            <h2>{{ history.title }}</h2>
-            <strong>{{ history.subTitle }}</strong>
-            <div *ngFor="let text of history.content|stringNewLine">
+            <h2>{{ history.getTitle(this.languageCode) }}</h2>
+            <strong>{{ history.getSubTitle(this.languageCode) }}</strong>
+            <div *ngFor="let text of history.getContent(this.languageCode)|stringNewLine">
               {{ text }}<br>
             </div>
           </div>
@@ -42,25 +43,35 @@ import {map} from 'rxjs/operators';
     </ng-container>
   `
 })
-export class PagePlanHistoryComponent implements OnDestroy {
-  historySubscription: Subscription;
+export class PagePlanHistoryComponent implements OnInit, OnDestroy {
   enableFormCurrent$: Observable<boolean>;
+  historySubscription: Subscription;
   historyList: HistoryModel[];
+  languageCode: string;
+  langSubscription;
+  menuMap;
+
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
               private router: Router) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        this.getInfo();
+      });
+    this.menuMap = this.settingService.menuMap;
+  }
+  ngOnInit() {
     this.enableFormCurrent$ = this.database.object('plan/current/enableForm').snapshotChanges()
       .pipe(map(element => {
         return element.payload.val() === true;
       }));
-    this.getInfo();
   }
   ngOnDestroy () {
-    if (this.historySubscription) {
-      this.historySubscription.unsubscribe();
-    }
+    this.langSubscription.unsubscribe();
+    this.historySubscription.unsubscribe();
   }
   getInfo() {
     if (this.historySubscription) {

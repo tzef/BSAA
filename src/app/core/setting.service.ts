@@ -32,8 +32,8 @@ export class SettingService {
         'zh' : '本屆炫光',
       },
       planHistory : {
-        'en' : '本屆炫光_En',
-        'zh' : '本屆炫光',
+        'en' : '歷屆炫光_En',
+        'zh' : '歷屆炫光',
       },
       school : {
         'en' : '炫光小學堂_En',
@@ -75,6 +75,10 @@ export class SettingService {
         'en' : '加入支持_En',
         'zh' : '加入支持',
       },
+      application: {
+        'en' : '報名本屆炫光_En',
+        'zh' : '報名本屆炫光'
+      }
     };
   }
   logout() {

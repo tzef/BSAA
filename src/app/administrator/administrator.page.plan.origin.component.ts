@@ -24,7 +24,7 @@ import {Router} from '@angular/router';
     <div class="container" style="margin-top: -50px">
       <div class="row">
         <div class="col">
-          <app-page-title-component title="炫光緣起"></app-page-title-component>
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planOrigin }}"></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
           <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
@@ -257,6 +257,7 @@ export class AdministratorPagePlanOriginComponent implements OnInit, OnDestroy {
       }));
   }
   ngOnDestroy() {
+    this.langSubscription.unsubscribe();
     this.paragraphListSubscription.unsubscribe();
   }
 
