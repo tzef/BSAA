@@ -27,6 +27,7 @@ import {AdministratorPagePlanHistoryDetailComponent} from './administrator.page.
 import {AdministratorPageSchoolGalleryDetailComponent} from './administrator.page.school.gallery.detail.component';
 import {AdministratorPageSchoolCalendarDetailComponent} from './administrator.page.school.calendar.detail.component';
 import {AdministratorPageDatabaseArtistDetailComponent} from './administrator.page.database.artist.detail.component';
+import {AdministratorPageDatabaseCoolguyDetailComponent} from './administrator.page.database.coolguy.detail.component';
 
 @NgModule({
   imports: [
@@ -46,7 +47,8 @@ import {AdministratorPageDatabaseArtistDetailComponent} from './administrator.pa
     AdministratorPageSchoolCalendarComponent, AdministratorPageSchoolCalendarDetailComponent,
     AdministratorPageSchoolGalleryComponent, AdministratorPageSchoolGalleryDetailComponent,
     AdministratorPageArtUpcomingComponent, AdministratorPageArtVrComponent, AdministratorPageArtUpcomingDetailComponent,
-    AdministratorPageDatabaseArtistComponent, AdministratorPageDatabaseCoolguyComponent, AdministratorPageDatabaseArtistDetailComponent,
+    AdministratorPageDatabaseArtistComponent, AdministratorPageDatabaseArtistDetailComponent,
+    AdministratorPageDatabaseCoolguyComponent, AdministratorPageDatabaseCoolguyDetailComponent,
     AdministratorPageDonationComponents
   ],
   providers: [AngularFireAuth, AuthGuard],

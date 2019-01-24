@@ -16,6 +16,7 @@ import {PageSchoolCalendarDetailFormComponent} from './page.school.calendar.deta
 import {PageDatabaseArtistComponent} from './page.database.artist.component';
 import {PageDatabaseCoolguyComponent} from './page.database.coolguy.component';
 import {PageDatabaseArtistDetailComponent} from './page.database.artist.detail.component';
+import {PageDatabaseCoolguyDetailComponent} from './page.database.coolguy.detail.component';
 
 export const routes = [
   {
@@ -106,7 +107,7 @@ export const routes = [
       },
       {
         path: 'coolguy/:id',
-        component: PageDatabaseArtistDetailComponent
+        component: PageDatabaseCoolguyDetailComponent
       },
     ]
   },

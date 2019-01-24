@@ -17,6 +17,7 @@ import {AdministratorPageArtUpcomingDetailComponent} from './administrator.page.
 import {AdministratorPageSchoolGalleryDetailComponent} from './administrator.page.school.gallery.detail.component';
 import {AdministratorPageSchoolCalendarDetailComponent} from './administrator.page.school.calendar.detail.component';
 import {AdministratorPageDatabaseArtistDetailComponent} from './administrator.page.database.artist.detail.component';
+import {AdministratorPageDatabaseCoolguyDetailComponent} from './administrator.page.database.coolguy.detail.component';
 
 export const routes = [{
   path: 'administrator',
@@ -122,7 +123,7 @@ export const routes = [{
         {
           path: 'coolguy/:id',
           canActivate: [AuthGuard],
-          component: AdministratorPageDatabaseArtistDetailComponent
+          component: AdministratorPageDatabaseCoolguyDetailComponent
         },
       ]
     },

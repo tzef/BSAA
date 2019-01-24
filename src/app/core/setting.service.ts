@@ -60,12 +60,12 @@ export class SettingService {
         'zh' : 'VR藝廊',
       },
       database : {
-        'en' : '藝術家資料庫_En',
-        'zh' : '藝術家資料庫',
+        'en' : '藝術家_En',
+        'zh' : '藝術家',
       },
       databaseArtist: {
-        'en' : '大藝術家_En',
-        'zh' : '大藝術家',
+        'en' : '資深藝術家_En',
+        'zh' : '資深藝術家',
       },
       databaseCoolGuy: {
         'en' : '炫小子_En',

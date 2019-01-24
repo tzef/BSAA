@@ -1,5 +1,5 @@
-import {Subscription} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {Observable, of, Subscription, zip} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
 import {CoolguyModel} from '../model/coolguy.model';
 import {Component, OnDestroy} from '@angular/core';
@@ -9,8 +9,15 @@ import {AngularFireDatabase} from 'angularfire2/database';
 
 @Component({
   template: `
+    <app-carousel-main-component editMode="true" [imageList]=this.carouselImageList|async></app-carousel-main-component>
+    <div class="container" style="margin-top: -50px">
+      <div class="row">
+        <div class="col">
+          <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.databaseCoolGuy }}"></app-page-title-component>
+        </div>
+      </div>
+    </div>
     <div class="container">
-      <app-page-title-component title="炫小子" topImage=false></app-page-title-component>
       <div class="row no-gutters">
         <ng-container *ngFor="let coolguy of coolguyList">
           <div class="col-md-2 col-sm-4 col-6 mt-4">
@@ -26,6 +33,10 @@ import {AngularFireDatabase} from 'angularfire2/database';
   `
 })
 export class PageDatabaseCoolguyComponent implements OnDestroy {
+  menuMap;
+  langSubscription;
+  languageCode: string;
+  carouselImageList: Observable<string[]>;
   coolguySubscription: Subscription;
   coolguyList: CoolguyModel[];
   constructor(private database: AngularFireDatabase,
@@ -33,7 +44,13 @@ export class PageDatabaseCoolguyComponent implements OnDestroy {
               private settingService: SettingService,
               private router: Router) {
     this.settingService.path$.next(this.router.url);
-    this.getInfo();
+    this.menuMap = this.settingService.menuMap;
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        this.getInfo();
+      });
+    this.getCarouselImageList();
   }
   ngOnDestroy () {
     if (this.coolguySubscription) {
@@ -53,5 +70,9 @@ export class PageDatabaseCoolguyComponent implements OnDestroy {
       .subscribe(results => {
         this.coolguyList = results;
       });
+  }
+  private getCarouselImageList() {
+    this.carouselImageList = zip(
+      this.storage.ref('database/coolguy/carousel/image_0').getDownloadURL().pipe(catchError(_ => of(''))));
   }
 }

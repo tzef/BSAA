@@ -26,6 +26,7 @@ import {PageSchoolGalleryDetailComponent} from './page.school.gallery.detail.com
 import {PageSchoolCalendarDetailComponent} from './page.school.calendar.detail.component';
 import {PageDatabaseArtistDetailComponent} from './page.database.artist.detail.component';
 import {PageSchoolCalendarDetailFormComponent} from './page.school.calendar.detail.form.component';
+import {PageDatabaseCoolguyDetailComponent} from './page.database.coolguy.detail.component';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import {PageSchoolCalendarDetailFormComponent} from './page.school.calendar.deta
     PageSchoolCalendarComponent, PageSchoolCalendarDetailComponent, PageSchoolCalendarDetailFormComponent,
     PageSchoolGalleryComponent, PageSchoolGalleryDetailComponent,
     PageArtUpcomingComponent, PageArtVrComponent, PageArtUpcomingDetailComponent,
-    PageDatabaseArtistComponent, PageDatabaseCoolguyComponent, PageDatabaseArtistDetailComponent,
+    PageDatabaseArtistComponent, PageDatabaseArtistDetailComponent,
+    PageDatabaseCoolguyComponent, PageDatabaseCoolguyDetailComponent,
     PageDonationComponent
   ],
   providers: [],
