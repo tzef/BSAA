@@ -1,12 +1,12 @@
-import {Router} from '@angular/router';
-import {Observable, of, Subscription, zip} from 'rxjs';
-import {catchError, delay, map, retry} from 'rxjs/operators';
-import {ArtistModel} from '../model/artist.model';
 import {Component, ElementRef, OnDestroy} from '@angular/core';
-import {SettingService} from '../core/setting.service';
-import {AngularFireStorage} from 'angularfire2/storage';
+import {catchError, delay, map, retry} from 'rxjs/operators';
 import {AngularFireDatabase} from 'angularfire2/database';
+import {AngularFireStorage} from 'angularfire2/storage';
 import {ParagraphModel} from '../model/paragraph.model';
+import {Observable, of, Subscription, zip} from 'rxjs';
+import {SettingService} from '../core/setting.service';
+import {ArtistModel} from '../model/artist.model';
+import {Router} from '@angular/router';
 
 @Component({
   template: `
@@ -44,7 +44,10 @@ import {ParagraphModel} from '../model/paragraph.model';
               <app-image-ratio-component image="{{ artist.imgUrl }}" ratio="1:1">
               </app-image-ratio-component>
             </a>
-            <p style="text-align: center">{{ artist.name }}</p>
+            <ng-container [ngSwitch]="languageCode">
+              <p *ngSwitchCase="'en'" style="text-align: center">{{ artist.en_name }}</p>
+              <p *ngSwitchDefault style="text-align: center">{{ artist.zh_name }}</p>
+            </ng-container>
           </div>
         </ng-container>
         <div class="col-md-2 col-sm-4 col-6 mt-4">
@@ -80,8 +83,10 @@ import {ParagraphModel} from '../model/paragraph.model';
                   </app-image-ratio-component>
                 </div>
                 <div class="col-8 md-form form-sm">
-                  <input #name type="text" class="form-control"
-                         placeholder="名字" value="{{ editingArtist.name }}">
+                  <input #zh_title type="text" class="form-control"
+                        placeholder="中文名字" value="{{ editingArtist.zh_name }}">
+                  <input #en_title type="text" class="form-control"
+                        placeholder="英文名字" value="{{ editingArtist.en_name }}">
                 </div>
               </div>
               <input #fileInput mdbInputDirective type="file" class="form-control" (change)="this.inputImage = $event.target.files[0]">
@@ -93,7 +98,7 @@ import {ParagraphModel} from '../model/paragraph.model';
           </div>
           <div class="text-center mt-1-half">
             <button *ngIf="editingArtist.key == ''" class="btn btn-info mb-2 waves-light" mdbWavesEffect
-                    (click)="add(name.value)">
+                    (click)="add(zh_title.value, en_title.value)">
               新增 <i class="fa fa-save ml-1"></i>
             </button>
             <button *ngIf="editingArtist.key != ''" class="btn btn-info mb-2 waves-light" mdbWavesEffect
@@ -101,7 +106,7 @@ import {ParagraphModel} from '../model/paragraph.model';
               刪除 <i class="fa fa-save ml-1"></i>
             </button>
             <button *ngIf="editingArtist.key != ''" class="btn btn-info mb-2 waves-light" mdbWavesEffect
-                    (click)="update(name.value, editingArtist.key)">
+                    (click)="update(zh_title.value, en_title.value, editingArtist.key)">
               更新 <i class="fa fa-save ml-1"></i>
             </button>
           </div>
@@ -150,16 +155,15 @@ export class AdministratorPageDatabaseArtistComponent implements OnDestroy {
   carouselInputImages: HTMLInputElement[] = new Array(1);
   carouselUploadPercents: Observable<string>[] = new Array(1);
   menuMap;
-  langSubscription;
   uploading = false;
-  languageCode: string;
   artistList: ArtistModel[];
   inputImage: HTMLInputElement;
   artistSubscription: Subscription;
   uploadPercent: Observable<string>;
   newArtist = new ArtistModel('', '');
   editingArtist = new ArtistModel('', '');
-
+  languageCode: string;
+  langSubscription;
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
@@ -192,7 +196,7 @@ export class AdministratorPageDatabaseArtistComponent implements OnDestroy {
         this.artistList = results;
       });
   }
-  add(name: string) {
+  add(zh_name: string, en_name: string) {
     let latestKey = 0;
     for (const model of this.artistList) {
       if (Number(model.key) > latestKey) {
@@ -213,7 +217,7 @@ export class AdministratorPageDatabaseArtistComponent implements OnDestroy {
               .pipe(retry(2))
               .subscribe(value => {
                 this.database.object('database/artist/' + (latestKey + 1))
-                  .set({name: name, imgUrl: value})
+                  .set({zh_name: zh_name, en_name: en_name, imgUrl: value})
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -227,7 +231,7 @@ export class AdministratorPageDatabaseArtistComponent implements OnDestroy {
       alert('請選擇一張圖片');
     }
   }
-  update(name: string, key: string) {
+  update(zh_name: string, en_name: string, key: string) {
     if (this.inputImage) {
       this.uploading = true;
       const fileRef = 'database/artist/image_' + key;
@@ -241,7 +245,7 @@ export class AdministratorPageDatabaseArtistComponent implements OnDestroy {
               .pipe(retry(2))
               .subscribe(value => {
                 this.database.object('database/artist/' + key)
-                  .update({name: name, imgUrl: value})
+                  .update({zh_name: zh_name, en_name: en_name, imgUrl: value})
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -253,7 +257,7 @@ export class AdministratorPageDatabaseArtistComponent implements OnDestroy {
       );
     } else {
       this.database.object('database/artist/' + key)
-        .update({name: name})
+        .update({zh_name: zh_name, en_name: en_name})
         .then(_ => {
           (document.getElementById('form-edit-close-btn') as HTMLElement).click();
         });

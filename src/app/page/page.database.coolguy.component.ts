@@ -1,7 +1,7 @@
 import {Observable, of, Subscription, zip} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {Router} from '@angular/router';
-import {CoolguyModel} from '../model/coolguy.model';
+import {ArtistModel} from '../model/artist.model';
 import {Component, OnDestroy} from '@angular/core';
 import {SettingService} from '../core/setting.service';
 import {AngularFireStorage} from 'angularfire2/storage';
@@ -25,7 +25,10 @@ import {AngularFireDatabase} from 'angularfire2/database';
               <app-image-ratio-component image="{{ coolguy.imgUrl }}" ratio="1:1">
               </app-image-ratio-component>
             </a>
-            <p style="text-align: center">{{ coolguy.name }}</p>
+            <ng-container [ngSwitch]="languageCode">
+              <p *ngSwitchCase="'en'" style="text-align: center">{{ coolguy.en_name }}</p>
+              <p *ngSwitchDefault style="text-align: center">{{ coolguy.zh_name }}</p>
+            </ng-container>
           </div>
         </ng-container>
       </div>
@@ -38,7 +41,7 @@ export class PageDatabaseCoolguyComponent implements OnDestroy {
   languageCode: string;
   carouselImageList: Observable<string[]>;
   coolguySubscription: Subscription;
-  coolguyList: CoolguyModel[];
+  coolguyList: ArtistModel[];
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
@@ -65,7 +68,7 @@ export class PageDatabaseCoolguyComponent implements OnDestroy {
       .list('database/coolguy')
       .snapshotChanges()
       .pipe(map(action => {
-        return action.map(json => new CoolguyModel(json.payload.val(), json.key));
+        return action.map(json => new ArtistModel(json.payload.val(), json.key));
       }))
       .subscribe(results => {
         this.coolguyList = results;

@@ -90,8 +90,8 @@ export class AdministratorPageSchoolGalleryDetailComponent implements OnInit, On
   inputImage: HTMLInputElement;
   uploadPercent: Observable<string>;
   gallery = new GalleryModel('', '');
-  newImg = new ImageModel(0, '', '', '');
-  editingImg = new ImageModel(0, '', '', '');
+  newImg = new ImageModel(0, '', '', '', '');
+  editingImg = new ImageModel(0, '', '', '', '');
 
   languageCode: string;
   langSubscription;
@@ -108,7 +108,7 @@ export class AdministratorPageSchoolGalleryDetailComponent implements OnInit, On
       .subscribe(results => {
         let serialNumber = 0;
         results.forEach(element => {
-          this.gallery.imgList.push(new ImageModel(serialNumber, '', element.payload.val(), element.key));
+          this.gallery.imgList.push(new ImageModel(serialNumber, '', '', element.payload.val(), element.key));
           serialNumber += 1;
         });
       });

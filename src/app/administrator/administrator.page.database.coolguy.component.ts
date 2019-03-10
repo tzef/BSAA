@@ -2,7 +2,7 @@ import {Router} from '@angular/router';
 import {Observable, of, Subscription, zip} from 'rxjs';
 import {catchError, delay, map, retry} from 'rxjs/operators';
 import {Component, ElementRef, OnDestroy} from '@angular/core';
-import {CoolguyModel} from '../model/coolguy.model';
+import {ArtistModel} from '../model/artist.model';
 import {SettingService} from '../core/setting.service';
 import {AngularFireStorage} from 'angularfire2/storage';
 import {AngularFireDatabase} from 'angularfire2/database';
@@ -43,7 +43,10 @@ import {AngularFireDatabase} from 'angularfire2/database';
               <app-image-ratio-component image="{{ coolguy.imgUrl }}" ratio="1:1">
               </app-image-ratio-component>
             </a>
-            <p style="text-align: center">{{ coolguy.name }}</p>
+            <ng-container [ngSwitch]="languageCode">
+              <p *ngSwitchCase="'en'" style="text-align: center">{{ coolguy.en_name }}</p>
+              <p *ngSwitchDefault style="text-align: center">{{ coolguy.zh_name }}</p>
+            </ng-container>
           </div>
         </ng-container>
         <div class="col-md-2 col-sm-4 col-6 mt-4">
@@ -78,8 +81,10 @@ import {AngularFireDatabase} from 'angularfire2/database';
                   </app-image-ratio-component>
                 </div>
                 <div class="col-8 md-form form-sm">
-                  <input #title type="text" class="form-control"
-                         placeholder="名字" value="{{ editingCoolguy.name }}">
+                  <input #zh_title type="text" class="form-control"
+                        placeholder="中文名字" value="{{ editingCoolguy.zh_name }}">
+                  <input #en_title type="text" class="form-control"
+                        placeholder="英文名字" value="{{ editingCoolguy.en_name }}">
                 </div>
               </div>
               <input #fileInput mdbInputDirective type="file" class="form-control" (change)="this.inputImage = $event.target.files[0]">
@@ -91,7 +96,7 @@ import {AngularFireDatabase} from 'angularfire2/database';
           </div>
           <div class="text-center mt-1-half">
             <button *ngIf="editingCoolguy.key == ''" class="btn btn-info mb-2 waves-light" mdbWavesEffect
-                    (click)="add(title.value)">
+                    (click)="add(zh_title.value, en_title.value)">
               新增 <i class="fa fa-save ml-1"></i>
             </button>
             <button *ngIf="editingCoolguy.key != ''" class="btn btn-info mb-2 waves-light" mdbWavesEffect
@@ -99,7 +104,7 @@ import {AngularFireDatabase} from 'angularfire2/database';
               刪除 <i class="fa fa-save ml-1"></i>
             </button>
             <button *ngIf="editingCoolguy.key != ''" class="btn btn-info mb-2 waves-light" mdbWavesEffect
-                    (click)="update(title.value, editingCoolguy.key)">
+                    (click)="update(zh_title.value, en_title.value, editingCoolguy.key)">
               更新 <i class="fa fa-save ml-1"></i>
             </button>
           </div>
@@ -148,15 +153,15 @@ export class AdministratorPageDatabaseCoolguyComponent implements OnDestroy {
   carouselInputImages: HTMLInputElement[] = new Array(1);
   carouselUploadPercents: Observable<string>[] = new Array(1);
   menuMap;
-  langSubscription;
   uploading = false;
-  languageCode: string;
-  newCoolguy = new CoolguyModel('', '');
-  editingCoolguy = new CoolguyModel('', '');
+  newCoolguy = new ArtistModel('', '');
+  editingCoolguy = new ArtistModel('', '');
   coolguySubscription: Subscription;
-  coolguyList: CoolguyModel[];
+  coolguyList: ArtistModel[];
   inputImage: HTMLInputElement;
   uploadPercent: Observable<string>;
+  languageCode: string;
+  langSubscription;
   constructor(private database: AngularFireDatabase,
               private storage: AngularFireStorage,
               private settingService: SettingService,
@@ -183,13 +188,13 @@ export class AdministratorPageDatabaseCoolguyComponent implements OnDestroy {
       .list('database/coolguy')
       .snapshotChanges()
       .pipe(map(action => {
-        return action.map(json => new CoolguyModel(json.payload.val(), json.key));
+        return action.map(json => new ArtistModel(json.payload.val(), json.key));
       }))
       .subscribe(results => {
         this.coolguyList = results;
       });
   }
-  add(name: string) {
+  add(zh_name: string, en_name: string) {
     let latestKey = 0;
     for (const model of this.coolguyList) {
       if (Number(model.key) > latestKey) {
@@ -209,7 +214,7 @@ export class AdministratorPageDatabaseCoolguyComponent implements OnDestroy {
               .pipe(retry(2))
               .subscribe(value => {
                 this.database.object('database/coolguy/' + (latestKey + 1))
-                  .set({name: name, imgUrl: value})
+                  .set({zh_name: zh_name, en_name: en_name, imgUrl: value})
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -223,7 +228,7 @@ export class AdministratorPageDatabaseCoolguyComponent implements OnDestroy {
       alert('請選擇一張圖片');
     }
   }
-  update(name: string, key: string) {
+  update(zh_name: string, en_name: string, key: string) {
     if (this.inputImage) {
       this.uploading = true;
       const fileRef = 'database/coolguy/image_' + key;
@@ -237,7 +242,7 @@ export class AdministratorPageDatabaseCoolguyComponent implements OnDestroy {
               .pipe(retry(2))
               .subscribe(value => {
                 this.database.object('database/coolguy/' + key)
-                  .update({name: name, imgUrl: value})
+                  .update({zh_name: zh_name, en_name: en_name, imgUrl: value})
                   .then(_ => {
                     this.uploading = false;
                     (document.getElementById('form-edit-close-btn') as HTMLElement).click();
@@ -249,7 +254,7 @@ export class AdministratorPageDatabaseCoolguyComponent implements OnDestroy {
       );
     } else {
       this.database.object('database/coolguy/' + key)
-        .update({name: name})
+        .update({zh_name: zh_name, en_name: en_name})
         .then(_ => {
           (document.getElementById('form-edit-close-btn') as HTMLElement).click();
         });

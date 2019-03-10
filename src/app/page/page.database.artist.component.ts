@@ -25,7 +25,10 @@ import {AngularFireDatabase} from 'angularfire2/database';
               <app-image-ratio-component image="{{ artist.imgUrl }}" ratio="1:1">
               </app-image-ratio-component>
             </a>
-            <p style="text-align: center">{{ artist.name }}</p>
+            <ng-container [ngSwitch]="languageCode">
+              <p *ngSwitchCase="'en'" style="text-align: center">{{ artist.en_name }}</p>
+              <p *ngSwitchDefault style="text-align: center">{{ artist.zh_name }}</p>
+            </ng-container>
           </div>
         </ng-container>
       </div>

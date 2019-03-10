@@ -13,11 +13,23 @@ import {ArtistModel} from '../model/artist.model';
         <div class="col-xl-2 col-lg-3 col-md-4">
           <app-image-ratio-component image="{{ artist.imgUrl }}" ratio="1:1">
           </app-image-ratio-component>
-          <p>{{ artist.name }}<br><span style="font-size: 14px">{{ artist.note }}</span></p>
+          <ng-container [ngSwitch]="languageCode">
+            <p *ngSwitchCase="'en'">{{ artist.en_name }}<br><span style="font-size: 14px">{{ artist.en_note }}</span></p>
+            <p *ngSwitchDefault>{{ artist.zh_name }}<br><span style="font-size: 14px">{{ artist.zh_note }}</span></p>
+          </ng-container>
         </div>
         <div class="col-xl-7 col-lg-6 col-md-5">
-          <ng-container *ngFor="let text of artist.description|stringNewLine">
-            <p>{{ text }}</p>
+          <ng-container [ngSwitch]="languageCode">
+            <ng-container *ngSwitchCase="'en'">
+              <ng-container *ngFor="let text of artist.en_description|stringNewLine">
+                <p>{{ text }}</p>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+              <ng-container *ngFor="let text of artist.zh_description|stringNewLine">
+                <p>{{ text }}</p>
+              </ng-container>
+            </ng-container>
           </ng-container>
         </div>
         <div class="col-xl-3 col-lg-3 col-md-3">
@@ -64,8 +76,17 @@ import {ArtistModel} from '../model/artist.model';
                src="{{artist.imgList[photoIndex].url}}"/>
           <div [ngStyle]="{'width':photoOriginWidth+'px'}"
                style="position:relative; padding-left: 10px; padding-right: 10px; margin:auto; background-color: #000000AA">
-            <ng-container *ngFor="let text of artist.imgList[photoIndex].note|stringNewLine">
-              <p style="color: #ffffff; text-align: center">{{ text }}</p>
+            <ng-container [ngSwitch]="languageCode">
+               <ng-container *ngSwitchCase="'en'">
+                  <ng-container *ngFor="let text of artist.imgList[photoIndex].en_note|stringNewLine">
+                    <p style="color: #ffffff; text-align: center">{{ text }}</p>
+                  </ng-container>
+               </ng-container>
+               <ng-container *ngSwitchDefault>
+                  <ng-container *ngFor="let text of artist.imgList[photoIndex].zh_note|stringNewLine">
+                    <p style="color: #ffffff; text-align: center">{{ text }}</p>
+                  </ng-container>
+               </ng-container>
             </ng-container>
           </div>
         </div>
@@ -86,6 +107,8 @@ export class PageDatabaseCoolguyDetailComponent implements OnInit, OnDestroy {
   photoTop = 0;
   visible = false;
 
+  languageCode: string;
+  langSubscription;
   @Input()
   set id(id: string) {
     this._id = id;
@@ -108,6 +131,10 @@ export class PageDatabaseCoolguyDetailComponent implements OnInit, OnDestroy {
               private route: ActivatedRoute,
               private sanitizer: DomSanitizer) {
     this.settingService.path$.next(this.router.url);
+    this.langSubscription = this.settingService.langCode$
+    .subscribe(lang => {
+      this.languageCode = lang;
+    });
   }
 
   async delay(duration: number) {

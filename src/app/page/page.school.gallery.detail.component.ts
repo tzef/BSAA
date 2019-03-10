@@ -52,7 +52,7 @@ export class PageSchoolGalleryDetailComponent implements OnInit, OnDestroy {
       .subscribe(results => {
         let serialNumber = 0;
         results.forEach(element => {
-          this.gallery.imgList.push(new ImageModel(serialNumber, '', element.payload.val(), element.key));
+          this.gallery.imgList.push(new ImageModel(serialNumber, '', '', element.payload.val(), element.key));
           serialNumber += 1;
         });
         this.galleryImages = this.gallery.imgList.map(imageModel => {

@@ -2,11 +2,13 @@ export class ImageModel {
   sort: number;
   url: string;
   key: string;
-  note: string;
+  zh_note: string;
+  en_note: string;
 
-  constructor(sort, note, url, key) {
+  constructor(sort, zh_note, en_note, url, key) {
     this.sort = sort;
-    this.note = note
+    this.zh_note = zh_note;
+    this.en_note = en_note;
     this.url = url;
     this.key = key;
   }
