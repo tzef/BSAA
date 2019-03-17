@@ -20,7 +20,7 @@ export class SettingService {
         'zh' : '關於協會',
       },
       plan : {
-        'en' : '炫光計畫_En',
+        'en' : 'Bright Star Project',
         'zh' : '炫光計畫',
       },
       planOrigin : {
@@ -28,15 +28,15 @@ export class SettingService {
         'zh' : '炫光緣起',
       },
       planCurrent : {
-        'en' : '本屆炫光_En',
+        'en' : 'Bright Start',
         'zh' : '本屆炫光',
       },
       planHistory : {
-        'en' : '歷屆炫光_En',
+        'en' : 'Editions',
         'zh' : '歷屆炫光',
       },
       school : {
-        'en' : '炫光小學堂_En',
+        'en' : 'Bright Star Classroom',
         'zh' : '炫光小學堂',
       },
       schoolCalendar : {
@@ -48,7 +48,7 @@ export class SettingService {
         'zh' : '歷屆花絮',
       },
       art : {
-        'en' : '炫藝場_En',
+        'en' : 'Performance Stage',
         'zh' : '炫藝場',
       },
       artUpcoming : {
@@ -60,7 +60,7 @@ export class SettingService {
         'zh' : 'VR藝廊',
       },
       database : {
-        'en' : '藝術家_En',
+        'en' : 'Artist',
         'zh' : '藝術家',
       },
       databaseArtist: {
@@ -72,7 +72,7 @@ export class SettingService {
         'zh' : '炫小子',
       },
       donation : {
-        'en' : '加入支持_En',
+        'en' : 'Join/Support',
         'zh' : '加入支持',
       },
       application: {
