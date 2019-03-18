@@ -40,7 +40,7 @@ export class SettingService {
         'zh' : '炫光小學堂',
       },
       schoolCalendar : {
-        'en' : '活動預告_En',
+        'en' : 'Upcoming Event',
         'zh' : '活動預告',
       },
       schoolGallery : {
@@ -52,7 +52,7 @@ export class SettingService {
         'zh' : '炫藝場',
       },
       artUpcoming : {
-        'en' : '活動預告_En',
+        'en' : 'Upcoming Event',
         'zh' : '活動預告',
       },
       artVR : {
@@ -64,11 +64,11 @@ export class SettingService {
         'zh' : '藝術家',
       },
       databaseArtist: {
-        'en' : '資深藝術家_En',
+        'en' : 'Senior Artists',
         'zh' : '資深藝術家',
       },
       databaseCoolGuy: {
-        'en' : '炫小子_En',
+        'en' : 'Emerging Artists',
         'zh' : '炫小子',
       },
       donation : {
@@ -76,7 +76,7 @@ export class SettingService {
         'zh' : '加入支持',
       },
       application: {
-        'en' : '報名本屆炫光_En',
+        'en' : 'Application',
         'zh' : '報名本屆炫光'
       }
     };
