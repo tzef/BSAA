@@ -28,11 +28,11 @@ export class SettingService {
         'zh' : '炫光緣起',
       },
       planCurrent : {
-        'en' : 'Bright Start',
+        'en' : 'Current Edition',
         'zh' : '本屆炫光',
       },
       planHistory : {
-        'en' : 'Editions',
+        'en' : 'Past Editions',
         'zh' : '歷屆炫光',
       },
       school : {
