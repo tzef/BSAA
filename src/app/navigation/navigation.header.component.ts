@@ -48,7 +48,7 @@ import {map} from 'rxjs/operators';
             <img src="/assets/youtube.png">
           </a>
         </div>
-        <div class="text-center d-sm-none">
+        <div class="text-center d-sm-none" *ngIf="isAuth$|async">
           <ng-container *ngIf="languageCode === 'zh'; else languageElseBlock2">
             <a (click)="changedLangToChinese()">中文</a> | <a style="color: lightgray" (click)="changedLangToEnglish()">English</a>
           </ng-container>
