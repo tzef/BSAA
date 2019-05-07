@@ -98,27 +98,27 @@ import {map} from 'rxjs/operators';
             <!--</ng-template>-->
           <!--</div>-->
         <!--</li>-->
-          <li class="nav-item dropdown" dropdown *ngIf="isAuth$|async">
+          <li class="nav-item dropdown" dropdown>
             <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
               {{ languageCode | i18nSelect:menuMap.database }}
             </a>
             <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
-              <!--<ng-container *ngIf="isAuth$|async; else databaseElseBlock">-->
+              <ng-container *ngIf="isAuth$|async; else databaseElseBlock">
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/database/artist" routerLinkActive="active">
                   {{ languageCode | i18nSelect:menuMap.databaseArtist }}
                 </a>
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/database/coolguy" routerLinkActive="active">
                   {{ languageCode | i18nSelect:menuMap.databaseCoolGuy }}
                 </a>
-              <!--</ng-container>-->
-              <!--<ng-template #databaseElseBlock>-->
-                <!--<a class="dropdown-item waves-light" mdbWavesEffect routerLink="/database/artist" routerLinkActive="active">-->
-                  <!--{{ languageCode | i18nSelect:menuMap.databaseArtist }}-->
-                <!--</a>-->
-                <!--<a class="dropdown-item waves-light" mdbWavesEffect routerLink="/database/coolguy" routerLinkActive="active">-->
-                  <!--{{ languageCode | i18nSelect:menuMap.databaseCoolGuy }}-->
-                <!--</a>-->
-              <!--</ng-template>-->
+              </ng-container>
+              <ng-template #databaseElseBlock>
+                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="/database/artist" routerLinkActive="active">
+                  {{ languageCode | i18nSelect:menuMap.databaseArtist }}
+                </a>
+                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="/database/coolguy" routerLinkActive="active">
+                  {{ languageCode | i18nSelect:menuMap.databaseCoolGuy }}
+                </a>
+              </ng-template>
             </div>
           </li>
           <ng-container *ngIf="isAuth$|async; else donationElseBlock">

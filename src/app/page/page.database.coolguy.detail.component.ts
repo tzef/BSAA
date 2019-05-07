@@ -71,11 +71,10 @@ import {ArtistModel} from '../model/artist.model';
         <div id="albumContainer" class="w-100 h-100" [ngClass]="visible ? 'visible' : 'invisible'"
              style="position:absolute;text-align: center">
           <img id="photoImage"
-               [ngStyle]="{'width':photoOriginWidth+'px','height':photoOriginHeight+'px','margin-top':photoTop+'px'}"
-               style="object-fit:contain;position:relative"
-               src="{{artist.imgList[photoIndex].url}}"/>
-          <div [ngStyle]="{'width':photoOriginWidth+'px'}"
-               style="position:relative; padding-left: 10px; padding-right: 10px; margin:auto; background-color: #000000AA">
+               [ngStyle]="{'width':photoOriginWidth+'px','height':photoOriginHeight+'px', 'margin-top':photoTop+'px'}"
+               style="position:relative" src="{{artist.imgList[photoIndex].url}}"/>
+          <div [ngStyle]="{'width':photoOriginWidth+'px','margin-left':photoLeft+'px'}"
+               style="position:relative; padding-left: 10px; padding-right: 10px; background-color: #000000AA">
             <ng-container [ngSwitch]="languageCode">
                <ng-container *ngSwitchCase="'en'">
                   <ng-container *ngFor="let text of artist.imgList[photoIndex].en_note|stringNewLine">
@@ -104,6 +103,7 @@ export class PageDatabaseCoolguyDetailComponent implements OnInit, OnDestroy {
   photoOriginHeight = 0;
   photoOriginWidth = 0;
   photoIndex = 0;
+  photoLeft = 0;
   photoTop = 0;
   visible = false;
 
@@ -155,12 +155,23 @@ export class PageDatabaseCoolguyDetailComponent implements OnInit, OnDestroy {
     const photoImage = (document.getElementById('photoImage') as HTMLImageElement);
     this.photoOriginHeight = photoImage.naturalHeight;
     this.photoOriginWidth = photoImage.naturalWidth;
-    if (this.photoOriginWidth > (albumWidth - 100)) {
-      const ratio = this.photoOriginHeight / this.photoOriginWidth;
-      this.photoOriginHeight = (albumWidth - 100) * ratio;
-      this.photoOriginWidth = (albumWidth - 100);
+    const ratio = this.photoOriginHeight / this.photoOriginWidth;
+    if (this.photoOriginHeight > albumHeight - 100) {
+      this.photoOriginHeight = (albumHeight - 100);
+      this.photoOriginWidth = (albumHeight - 100) / ratio;
+      this.photoLeft = (albumWidth - this.photoOriginWidth) / 2;
+      if (this.photoLeft < 0) {
+        this.photoLeft = 0
+      }
+      this.photoTop = 0;
+    } else {
+      if (this.photoOriginWidth > (albumWidth - 100)) {
+        this.photoOriginHeight = (albumWidth - 100) * ratio;
+        this.photoOriginWidth = (albumWidth - 100);
+      }
+      this.photoLeft = (albumWidth - this.photoOriginWidth) / 2;
+      this.photoTop = (albumHeight - this.photoOriginHeight) / 2;
     }
-    this.photoTop = (albumHeight - this.photoOriginHeight) / 2;
   }
   nextPhoto() {
     this.photoIndex += 1;
