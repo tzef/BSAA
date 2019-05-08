@@ -68,12 +68,12 @@ import {ArtistModel} from '../model/artist.model';
         </div>
       </div>
       <div class="modal-dialog modal-dialog-centered modal-lg" role="document" *ngIf="this.artist.imgList.length > 0">
-        <div id="albumContainer" class="w-100 h-100" [ngClass]="visible ? 'visible' : 'invisible'"
-             style="position:absolute;text-align: center">
+        <div id="albumContainer" class="w-100 h-100" [ngClass]="visible ? 'visible' : 'invisible'" style="position:absolute">
           <img id="photoImage"
-               [ngStyle]="{'width':photoOriginWidth+'px','height':photoOriginHeight+'px', 'margin-top':photoTop+'px'}"
+               [ngStyle]="{'width':photoOriginWidth+'px','height':photoOriginHeight+'px',
+               'margin-top':photoTop+'px', 'margin-left':photoLeft+'px'}"
                style="position:relative" src="{{artist.imgList[photoIndex].url}}"/>
-          <div [ngStyle]="{'width':photoOriginWidth+'px','margin-left':photoLeft+'px'}"
+          <div [ngStyle]="{'width':photoOriginWidth+'px', 'margin-left':photoLeft+'px'}"
                style="position:relative; padding-left: 10px; padding-right: 10px; background-color: #000000AA">
             <ng-container [ngSwitch]="languageCode">
                <ng-container *ngSwitchCase="'en'">
@@ -100,6 +100,7 @@ export class PageDatabaseCoolguyDetailComponent implements OnInit, OnDestroy {
   private _id: string;
 
   artist = new ArtistModel('', '');
+  photoContainerWidth = 0;
   photoOriginHeight = 0;
   photoOriginWidth = 0;
   photoIndex = 0;
@@ -155,14 +156,12 @@ export class PageDatabaseCoolguyDetailComponent implements OnInit, OnDestroy {
     const photoImage = (document.getElementById('photoImage') as HTMLImageElement);
     this.photoOriginHeight = photoImage.naturalHeight;
     this.photoOriginWidth = photoImage.naturalWidth;
+    this.photoContainerWidth = albumWidth;
     const ratio = this.photoOriginHeight / this.photoOriginWidth;
     if (this.photoOriginHeight > albumHeight - 100) {
       this.photoOriginHeight = (albumHeight - 100);
       this.photoOriginWidth = (albumHeight - 100) / ratio;
       this.photoLeft = (albumWidth - this.photoOriginWidth) / 2;
-      if (this.photoLeft < 0) {
-        this.photoLeft = 0
-      }
       this.photoTop = 0;
     } else {
       if (this.photoOriginWidth > (albumWidth - 100)) {
