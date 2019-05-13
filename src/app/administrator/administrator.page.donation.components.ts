@@ -54,13 +54,15 @@ import {ToastService} from 'ng-uikit-pro-standard';
         <div class="col mt-3" style="z-index: 2">
           <ng-container *ngIf="this.displayPlan; else displayPlanElseBlock">
             <button type="button" class="btn btn-rounded waves-light" mdbWavesEffect
-                    style="background: #55a9b7;" (click)="showPlan()">招募計畫</button>
-            <button type="button" class="btn btn-rounded waves-light theme-gray" mdbWavesEffect (click)="showForm()">報名炫志工</button>
+                    style="background: #55a9b7;" (click)="showPlan()">{{ languageCode | i18nSelect:menuMap.support_recruitment }}</button>
+            <button type="button" class="btn btn-rounded waves-light theme-gray" mdbWavesEffect (click)="showForm()">
+            {{ languageCode | i18nSelect:menuMap.support_apply }}</button>
           </ng-container>
           <ng-template #displayPlanElseBlock>
-            <button type="button" class="btn btn-rounded waves-light theme-gray" mdbWavesEffect (click)="showPlan()">招募計畫</button>
+            <button type="button" class="btn btn-rounded waves-light theme-gray" mdbWavesEffect (click)="showPlan()">
+            {{ languageCode | i18nSelect:menuMap.support_recruitment }}</button>
             <button type="button" class="btn btn-rounded waves-light" mdbWavesEffect
-                    style="background: #55a9b7;" (click)="showForm()">報名炫志工</button>
+                    style="background: #55a9b7;" (click)="showForm()">{{ languageCode | i18nSelect:menuMap.support_apply }}</button>
           </ng-template>
         </div>
       </div>
@@ -82,25 +84,28 @@ import {ToastService} from 'ng-uikit-pro-standard';
         </div>
       </div>
       <div class="mt-3" style="background: #a1a1a1; padding: 24px" *ngIf="this.displayForm">
-        <p style="color: white">成人志工申請表</p>
+        <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_application }}</p>
         <div class="row mt-2">
           <div class="col-md-12">
-            <p style="color: white">申請人姓名</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_name }}</p>
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
-                  <input type="text" name="formName" placeholder="申請人姓名" class="form-control" required [(ngModel)]="formName">
+                  <input type="text" name="formName" placeholder="{{ languageCode | i18nSelect:menuMap.support_name }}"
+                  class="form-control" required [(ngModel)]="formName">
                 </div>
               </div>
               <div class="col-6">
                 <div class="row mt-1" style="margin-left: 0px">
                   <div class="form-check">
                     <input name="groupSex" type="radio" id="radioMale" class="form-check-input" (click)="changeSex('先生')">
-                    <label class="form-check-label" for="radioMale"><p style="color: white">先生</p></label>
+                    <label class="form-check-label" for="radioMale"><p style="color: white">
+                    {{ languageCode | i18nSelect:menuMap.support_mr }}</p></label>
                   </div>
                   <div class="form-check">
                     <input name="groupSex" type="radio" id="radioFemale" class="form-check-input" (click)="changeSex('小姐')">
-                    <label class="form-check-label" for="radioFemale"><p style="color: white">小姐</p></label>
+                    <label class="form-check-label" for="radioFemale"><p style="color: white">
+                    {{ languageCode | i18nSelect:menuMap.support_ms }}</p></label>
                   </div>
                 </div>
               </div>
@@ -112,106 +117,115 @@ import {ToastService} from 'ng-uikit-pro-standard';
                      class="form-control"
                      required [(ngModel)]="formBirthday">
             </div>
-            <p style="color: white">住家電話</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_homeTel }}</p>
             <div class="form-group">
               <input type="text"
                      name="formHomePhone"
                      class="form-control"
                      required [(ngModel)]="formHomePhone">
             </div>
-            <p style="color: white">行動電話</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_mobile }}</p>
             <div class="form-group">
               <input type="text"
                      name="formCellPhone"
                      class="form-control"
                      required [(ngModel)]="formCellPhone">
             </div>
-            <p style="color: white">公司電話</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_officeTel }}</p>
             <div class="form-group">
               <input type="text"
                      name="formCompanyPhone"
                      class="form-control"
                      required [(ngModel)]="formCompanyPhone">
             </div>
-            <p style="color: white">電子郵件</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_email }}</p>
             <div class="form-group">
               <input type="email"
                      name="formMail"
                      class="form-control"
                      required [(ngModel)]="formMail">
             </div>
-            <p style="color: white">地址</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_address }}</p>
             <div class="form-group">
               <input type="text"
                      name="formAddress"
                      class="form-control"
                      required [(ngModel)]="formAddress">
             </div>
-            <p style="color: white">學歷</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_education }}</p>
             <div class="form-group">
               <div class="row">
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeDoctor" (click)="changeDegree('博士')">
-                  <label class="form-check-label" for="radioDegreeDoctor"><p style="color: white">博士</p></label>
+                  <label class="form-check-label" for="radioDegreeDoctor"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_phD }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeMaster" (click)="changeDegree('碩士')">
-                  <label class="form-check-label" for="radioDegreeMaster"><p style="color: white">碩士</p></label>
+                  <label class="form-check-label" for="radioDegreeMaster"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_master }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeBachelor" (click)="changeDegree('大學')">
-                  <label class="form-check-label" for="radioDegreeBachelor"><p style="color: white">大學</p></label>
+                  <label class="form-check-label" for="radioDegreeBachelor"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_university }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeVocational" (click)="changeDegree('專科')">
-                  <label class="form-check-label" for="radioDegreeVocational"><p style="color: white">專科</p></label>
+                  <label class="form-check-label" for="radioDegreeVocational"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_college }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeSenior" (click)="changeDegree('高中')">
-                  <label class="form-check-label" for="radioDegreeSenior"><p style="color: white">高中</p></label>
+                  <label class="form-check-label" for="radioDegreeSenior"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_seniorHigh }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeJunior" (click)="changeDegree('國中')">
-                  <label class="form-check-label" for="radioDegreeJunior"><p style="color: white">國中</p></label>
+                  <label class="form-check-label" for="radioDegreeJunior"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_juniorHigh }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeUnderJunior" (click)="changeDegree('國中以下')">
-                  <label class="form-check-label" for="radioDegreeUnderJunior"><p style="color: white">國中以下</p></label>
+                  <label class="form-check-label" for="radioDegreeUnderJunior"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_elementary }}</p></label>
                 </div>
               </div>
               <input type="text" name="formDegreeSchool" class="form-control mt-1" placeholder="校名" [(ngModel)]="formSchool">
               <input type="text" name="formDegreeDepartment" class="form-control mt-1" placeholder="系所" [(ngModel)]="formDepartment">
             </div>
-            <p style="color: white">外語能力</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_secondLanguage }}</p>
             <div class="form-group">
               <div class="row">
                 <div class="custom-control custom-checkbox ml-3 mr-2">
                   <input #langEngInput type="checkbox" class="custom-control-input" id="form-language-eng"
                          (click)="setLanguageEnglish(langEngInput.value)">
-                  <label class="custom-control-label" for="form-language-eng">英語</label>
+                  <label class="custom-control-label" for="form-language-eng">
+                  {{ languageCode | i18nSelect:menuMap.support_english }}</label>
                 </div>
                 <div class="custom-control custom-checkbox">
                   <input #langJapInput type="checkbox" class="custom-control-input" id="form-language-jap"
                          (click)="setLanguageJapaness(langJapInput.value)">
-                  <label class="custom-control-label" for="form-language-jap">日語</label>
+                  <label class="custom-control-label" for="form-language-jap">
+                  {{ languageCode | i18nSelect:menuMap.support_japances }}</label>
                 </div>
               </div>
               <input type="text" name="formLanguageOthers" class="form-control mt-1" placeholder="其他語言" [(ngModel)]="formLanguageOthers">
             </div>
-            <p style="color: white">服務單位 (四選一)</p>
+            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_affiliation }}</p>
             <div class="form-group">
               <div class="row no-gutters">
                 <div class="col-lg-1 col-md-2 mt-1">
                   <input class="form-check-input" name="groupOccupation"
                          type="radio" id="radioOccupationWork" (click)="changeOccupation('在職')">
-                  <label class="form-check-label" for="radioOccupationWork">在職</label>
+                  <label class="form-check-label" for="radioOccupationWork">{{ languageCode | i18nSelect:menuMap.support_employed }}</label>
                 </div>
                 <div class="col-lg-2 col-md-4 mr-md-2">
                   <input type="text" name="formOccupationWorkDepartment" class="form-control" placeholder="服務單位"
@@ -226,7 +240,8 @@ import {ToastService} from 'ng-uikit-pro-standard';
                 <div class="col-lg-1 col-md-2 mt-1">
                   <input class="form-check-input d-inline" name="groupOccupation"
                          type="radio" id="radioOccupationRetirement" (click)="changeOccupation('退休')">
-                  <label class="form-check-label" for="radioOccupationRetirement">退休</label>
+                  <label class="form-check-label" for="radioOccupationRetirement">
+                  {{ languageCode | i18nSelect:menuMap.support_retired }}</label>
                 </div>
                 <div class="col-lg-2 col-md-4 mr-md-2">
                   <input type="text" name="formOccupationRetirementDepartment" class="form-control" placeholder="服務單位"
@@ -241,7 +256,8 @@ import {ToastService} from 'ng-uikit-pro-standard';
                 <div class="col-lg-1 col-md-2 mt-1">
                   <input class="form-check-input" name="groupOccupation"
                          type="radio" id="radioOccupationStudent" (click)="changeOccupation('學生')">
-                  <label class="form-check-label" for="radioOccupationStudent">學生</label>
+                  <label class="form-check-label" for="radioOccupationStudent">
+                  {{ languageCode | i18nSelect:menuMap.support_student }}</label>
                 </div>
                 <div class="col-lg-2 col-md-4 mr-md-2">
                   <input type="text" name="formOccupationStudentSchool" class="form-control" placeholder="就讀學校"
@@ -256,7 +272,8 @@ import {ToastService} from 'ng-uikit-pro-standard';
                 <div class="col-lg-1 col-md-2 mt-1">
                   <input class="form-check-input" name="groupOccupation"
                          type="radio" id="radioOccupationOthers" (click)="changeOccupation('其他')">
-                  <label class="form-check-label" for="radioOccupationOthers">其他</label>
+                  <label class="form-check-label" for="radioOccupationOthers">
+                  {{ languageCode | i18nSelect:menuMap.support_other }}</label>
                 </div>
                 <div class="col-lg-2 col-md-4">
                   <input type="text" name="formOccupationOthers" class="form-control" placeholder="其他" [(ngModel)]="formOccupationOthers">
@@ -271,16 +288,18 @@ import {ToastService} from 'ng-uikit-pro-standard';
                           [(ngModel)]="formVolunteerExperience"></textarea>
               </div>
               <div class="row" style="margin-left: 0px">
-                <p style="color: white">志工手冊</p>
+                <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_volunteerCertificate }}</p>
                 <div class="form-check">
                   <input name="groupVolunteerBook" type="radio" id="radioVolunteerYes" class="form-check-input"
                          (click)="changeVolunteerBook(true)">
-                  <label class="form-check-label" for="radioVolunteerYes"><p style="color: white">有</p></label>
+                  <label class="form-check-label" for="radioVolunteerYes"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_yes }}</p></label>
                 </div>
                 <div class="form-check">
                   <input name="groupVolunteerBook" type="radio" id="radioVolunteerNo" class="form-check-input"
                          (click)="changeVolunteerBook(false)">
-                  <label class="form-check-label" for="radioVolunteerNo"><p style="color: white">無</p></label>
+                  <label class="form-check-label" for="radioVolunteerNo"><p style="color: white">
+                  {{ languageCode | i18nSelect:menuMap.support_no }}</p></label>
                 </div>
               </div>
               <div class="form-group">
@@ -289,14 +308,15 @@ import {ToastService} from 'ng-uikit-pro-standard';
               <div class="form-group">
                 <textarea type="text" [(ngModel)]="formIntroduce" placeholder="自我介紹" class="md-textarea form-control" rows="3"></textarea>
               </div>
-              <p style="color: white">上傳大頭照(300KB)</p>
+              <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_uploadHeadshot }}</p>
               <input mdbInputDirective type="file" class="form-control" (change)="this.formFile = $event.target.files[0]">
             </div>
             <div *ngIf="uploading === true" style="height: 20px; background-color: burlywood"
                  [ngStyle]="{'width' : uploadPercent | async}">
               {{ uploadPercent | async }}
             </div>
-            <p class="float-right"><input type="submit" class="btn btn-default" value="確認送出" (click)="submit()"></p>
+            <p class="float-right"><input type="submit" class="btn btn-default"
+            value="{{ languageCode | i18nSelect:menuMap.confirm }}" (click)="submit()"></p>
           </div>
         </div>
       </div>
@@ -461,6 +481,10 @@ import {ToastService} from 'ng-uikit-pro-standard';
   `]
 })
 export class AdministratorPageDonationComponents implements OnDestroy {
+  languageCode: string;
+  langSubscription;
+  menuMap;
+
   uploadingImage1 = false;
   uploadingImage2 = false;
   uploadingCarousel = false;
@@ -520,11 +544,19 @@ export class AdministratorPageDonationComponents implements OnDestroy {
               private toastService: ToastService,
               private router: Router) {
     this.settingService.path$.next(this.router.url);
-    this.getCarouselImageList();
-    this.subscription = this.database.object('donation').snapshotChanges()
-      .subscribe(json => {
-        this.donation = new DonationModel(json.payload.val());
+    this.langSubscription = this.settingService.langCode$
+      .subscribe(lang => {
+        this.languageCode = lang;
+        if (this.subscription != null) {
+          this.subscription.unsubscribe();
+        }
+        this.subscription = this.database.object('donation/' + this.languageCode).snapshotChanges()
+          .subscribe(json => {
+            this.donation = new DonationModel(json.payload.val());
+          });
       });
+    this.menuMap = this.settingService.menuMap;
+    this.getCarouselImageList();
   }
   private getCarouselImageList() {
     this.carouselImageList = zip(
@@ -561,7 +593,7 @@ export class AdministratorPageDonationComponents implements OnDestroy {
       });
   }
   updateDescription(text: string) {
-    this.database.object('donation')
+    this.database.object('donation/' + this.languageCode)
       .update({ description: text })
       .then(_ => {
         (document.getElementById('form-description-close-btn') as HTMLElement).click();
@@ -570,7 +602,7 @@ export class AdministratorPageDonationComponents implements OnDestroy {
       });
   }
   updatePlan(text: string) {
-    this.database.object('donation')
+    this.database.object('donation/' + this.languageCode)
       .update({ plan: text })
       .then(_ => {
         (document.getElementById('form-plan-close-btn') as HTMLElement).click();
@@ -609,7 +641,7 @@ export class AdministratorPageDonationComponents implements OnDestroy {
           this.getCarouselImageList();
         }
       });
-    this.database.object('donation')
+    this.database.object('donation/' + this.languageCode)
       .update({ photo1title: title1, photo2title: title2 })
       .then(_ => {
         (document.getElementById('form-photo-close-btn') as HTMLElement).click();
@@ -861,5 +893,6 @@ export class AdministratorPageDonationComponents implements OnDestroy {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.langSubscription.unsubscribe();
   }
 }
