@@ -43,9 +43,9 @@ import {map} from 'rxjs/operators';
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/origin" routerLinkActive="active">
                   {{ languageCode | i18nSelect:menuMap.planOrigin }}
                 </a>
-                <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/current" routerLinkActive="active">
-                  {{ languageCode | i18nSelect:menuMap.planCurrent }}
-                </a>
+                <!--<a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/current" routerLinkActive="active">-->
+                <!--{{ languageCode | i18nSelect:menuMap.planCurrent }}-->
+                <!--</a>-->
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="plan/history" routerLinkActive="active">
                   {{ languageCode | i18nSelect:menuMap.planHistory }}
                 </a>
