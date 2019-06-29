@@ -12,7 +12,7 @@ import {Observable} from 'rxjs';
       <div class="row mt-2">
         <div class="col-md-6">
           <div class="form-group">
-            <strong>1. 作品上傳</strong>
+            <strong>1. 作品上傳(必填)</strong>
             <p>JPG檔/大小 300 KB 以內</p>
             <input mdbInputDirective type="file" class="form-control" (change)="this.formFile = $event.target.files[0]">
             <br>
@@ -38,7 +38,7 @@ import {Observable} from 'rxjs';
             </div>
           </div>
           <div class="form-group">
-            <strong>2. 姓名</strong>
+            <strong>2. 姓名(必填)</strong>
             <input type="text"
                    name="formName"
                    class="form-control"
@@ -46,7 +46,7 @@ import {Observable} from 'rxjs';
                    required [(ngModel)]="formName">
           </div>
           <div class="form-group">
-            <strong>3. 年齡<span style="font-size: 12px; color: darkgray;">(至2018/9/16，實足歲滿13歲至未滿23歲之間)</span></strong>
+            <strong>3. 年齡<span style="font-size: 12px; color: darkgray;">(至2018/9/16，實足歲滿13歲至未滿23歲之間)</span>(必填)</strong>
             <input type="number"
                    name="formAge"
                    class="form-control"
@@ -54,7 +54,7 @@ import {Observable} from 'rxjs';
                    required [(ngModel)]="formAge">
           </div>
           <div class="form-group">
-            <strong>4. 連絡地址</strong>
+            <strong>4. 連絡地址(必填)</strong>
             <input type="text"
                    name="formAddress"
                    class="form-control"
@@ -66,16 +66,16 @@ import {Observable} from 'rxjs';
             <input type="text"
                    name="formHomePhone"
                    class="form-control"
-                   placeholder="住家"
+                   placeholder="住家(必填)"
                    [(ngModel)]="formHomePhone">
             <input type="text"
                    name="formCellPhone"
                    class="form-control"
-                   placeholder="手機"
+                   placeholder="手機(必填)"
                    [(ngModel)]="formCellPhone">
           </div>
           <div class="form-group">
-            <strong>6. MAIL</strong>
+            <strong>6. MAIL(必填)</strong>
             <input type="email"
                    name="formMail"
                    class="form-control"
@@ -83,7 +83,7 @@ import {Observable} from 'rxjs';
                    required [(ngModel)]="formMail">
           </div>
           <div class="form-group">
-            <strong>7. 就讀學校</strong>
+            <strong>7. 就讀學校(必填)</strong>
             <input type="text"
                    name="formSchool"
                    class="form-control"
@@ -93,7 +93,7 @@ import {Observable} from 'rxjs';
         </div>
         <div class="col-md-6">
           <div class="form-group">
-            <strong>8. 自我介紹</strong>
+            <strong>8. 自我介紹(必填)</strong>
             <textarea type="text" [(ngModel)]="formIntroduce"
                       placeholder="ex: 熱愛東方文化。覺得悲劇非常美。或許是相由心生，沒表情的時候看起來很憂鬱。生長在桃園市郊，
 這裡一直有一種冷清的感覺，尤其陰雨天，窗外的一切看起來都帶著濃厚的疏離感。畫畫，是我最喜歡的事，能抒發情緒更能帶動成長，如果可以的話，
@@ -105,7 +105,7 @@ import {Observable} from 'rxjs';
                       class="md-textarea form-control" rows="7"></textarea>
           </div>
           <div class="form-group">
-            <strong>10. 作品創作理念<span style="font-size: 12px; color: darkgray;">(300字為限)</span></strong>
+            <strong>10. 作品創作理念<span style="font-size: 12px; color: darkgray;">(300字為限)</span>(必填)</strong>
             <textarea type="text" [(ngModel)]="formCreateConcept"
                       placeholder="ex: 當地震、海嘯、火山爆發等天然災害來臨前，均會產生頻率非常低的聲波，即「次聲波」。
   次聲波是指頻率小於20赫茲（人耳能聽見的最小頻率），但是高於氣候造成的氣壓變動的聲波。人耳基本上聽不到次聲波，但是能通過其波壓感受到，
