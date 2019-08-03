@@ -22,7 +22,7 @@ import {Observable} from 'rxjs';
                    class="form-control"
                    placeholder="ex: https://www.youtube.com/watch?v=XXXXXXXX"
                    [(ngModel)]="formVideoUrl">
-            <p>備註：每人限傳一件作品：音樂、歌唱、舞蹈、戲劇等表演藝術或錄像作品，請以 3 分鐘為限，平面或立體作品長寬高限制在 100 公分以內。
+            <p>備註：每人限傳一件作品：音樂、歌唱、舞蹈、戲劇等表演藝術或錄像作品，請以 3 分鐘為限，平面或立體作品長寬高限制在 100 公分以內，立體作品請傳三個角度的作品照。
             </p>
             <p>作品名稱/媒材/尺寸</p>
             <div class="row">
