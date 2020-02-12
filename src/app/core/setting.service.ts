@@ -69,7 +69,7 @@ export class SettingService {
       },
       databaseCoolGuy: {
         'en' : 'Emerging Artists',
-        'zh' : '炫小子',
+        'zh' : '極炫/光 (歷屆得獎者)',
       },
       donation : {
         'en' : 'Join/Support',
