@@ -43,28 +43,14 @@ import {Observable, of, zip} from 'rxjs';
               </div>
             </div>
             <div class="col-xl-10 col-lg-9 col-md-8">
-              <ng-container *ngFor="let text of paragraph.content|stringNewLine">
-                <ng-container *ngIf="text|linkModel; else isLinkElseBlock; let link">
-                  <a href="{{ link[1] }}" target="_blank">{{ link[2] }}</a>
-                </ng-container>
-                <ng-template #isLinkElseBlock>
-                  <p>{{ text }}</p>
-                </ng-template>
-              </ng-container>
+              <app-paragraph-style-component content="{{ paragraph.content }}"></app-paragraph-style-component>
             </div>
           </div>
         </ng-container>
         <ng-template #paragraphElseBlock>
           <div class="row">
             <div class="col-xl-10 col-lg-9 col-md-8">
-              <ng-container *ngFor="let text of paragraph.content|stringNewLine">
-                <ng-container *ngIf="text|linkModel; else isLinkElseBlock; let link">
-                  <a href="{{ link[1] }}" target="_blank">{{ link[2] }}</a>
-                </ng-container>
-                <ng-template #isLinkElseBlock>
-                  <p>{{ text }}</p>
-                </ng-template>
-              </ng-container>
+              <app-paragraph-style-component content="{{ paragraph.content }}"></app-paragraph-style-component>
             </div>
             <div class="col-xl-2 col-lg-3 col-md-4">
               <div class="row">
