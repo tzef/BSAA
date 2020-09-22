@@ -18,6 +18,9 @@ import {AdministratorPageSchoolGalleryDetailComponent} from './administrator.pag
 import {AdministratorPageSchoolCalendarDetailComponent} from './administrator.page.school.calendar.detail.component';
 import {AdministratorPageDatabaseArtistDetailComponent} from './administrator.page.database.artist.detail.component';
 import {AdministratorPageDatabaseCoolguyDetailComponent} from './administrator.page.database.coolguy.detail.component';
+import {AdministratorPage2018Component} from './administrator.page.2018';
+import {AdministratorPage2019Component} from './administrator.page.2019';
+import {AdministratorPage2020Component} from './administrator.page.2020';
 
 export const routes = [{
   path: 'administrator',
@@ -132,5 +135,20 @@ export const routes = [{
       canActivate: [AuthGuard],
       component: AdministratorPageDonationComponents
     },
+    {
+      path: '2018',
+      canActivate: [AuthGuard],
+      component: AdministratorPage2018Component
+    },
+    {
+      path: '2019',
+      canActivate: [AuthGuard],
+      component: AdministratorPage2019Component
+    },
+    {
+      path: '2020',
+      canActivate: [AuthGuard],
+      component: AdministratorPage2020Component
+    }
   ]
 }];
