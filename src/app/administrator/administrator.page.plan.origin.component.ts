@@ -27,7 +27,7 @@ import {Router} from '@angular/router';
           <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planOrigin }}"></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
-          <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+          <button type="button" class="btn btn-rounded theme-greenblue waves-light" mdbWavesEffect
                   routerLink="/plan/form">報名本屆炫光</button>
         </div>
       </div>

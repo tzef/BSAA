@@ -22,11 +22,11 @@ import {Router} from '@angular/router';
           <ng-container *ngIf="this.displayPlan; else displayPlanElseBlock">
             <button type="button" class="btn btn-rounded waves-light" mdbWavesEffect
                     style="background: #55a9b7;" (click)="showPlan()">{{ languageCode | i18nSelect:menuMap.support_recruitment }}</button>
-            <button type="button" class="btn btn-rounded waves-light theme-gray" mdbWavesEffect (click)="showForm()">
+            <button type="button" class="btn btn-rounded waves-light theme-greenblue" mdbWavesEffect (click)="showForm()">
             {{ languageCode | i18nSelect:menuMap.support_apply }}</button>
           </ng-container>
           <ng-template #displayPlanElseBlock>
-            <button type="button" class="btn btn-rounded waves-light theme-gray" mdbWavesEffect (click)="showPlan()">
+            <button type="button" class="btn btn-rounded waves-light theme-greenblue" mdbWavesEffect (click)="showPlan()">
             {{ languageCode | i18nSelect:menuMap.support_recruitment }}</button>
             <button type="button" class="btn btn-rounded waves-light" mdbWavesEffect
                     style="background: #55a9b7;" (click)="showForm()">{{ languageCode | i18nSelect:menuMap.support_apply }}</button>

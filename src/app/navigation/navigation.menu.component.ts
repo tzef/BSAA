@@ -5,7 +5,7 @@ import {map} from 'rxjs/operators';
 @Component({
   selector: 'app-menu-component',
   template: `
-    <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark scrolling-navbar ie-nav {{ color }}"
+    <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark scrolling-navbar ie-nav"
                 data-spy="affix" data-offset-top="17" [containerInside]="true">
       <links>
         <ul class="navbar-nav mr-auto">
@@ -141,7 +141,6 @@ import {map} from 'rxjs/operators';
   `
 })
 export class NavigationMenuComponent implements OnDestroy {
-  @Input() color: string;
   highLightMenu = '/about';
   languageCode: string;
   pathSubscription;

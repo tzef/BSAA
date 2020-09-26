@@ -19,14 +19,14 @@ import {Observable, of, zip} from 'rxjs';
         <ng-container *ngIf="this.event.enableForm; else formButtonElseBlock">
           <div class="col mt-3" style="text-align: right">
             <p>活動開放報名中</p>
-            <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+            <button type="button" class="btn btn-rounded theme-greenblue waves-light" mdbWavesEffect
                     (click)="updateFormStatus(false)">關閉報名活動</button>
           </div>
         </ng-container>
         <ng-template #formButtonElseBlock>
           <div class="col mt-3" style="text-align: right">
             <p>活動已關閉報名</p>
-            <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+            <button type="button" class="btn btn-rounded theme-greenblue waves-light" mdbWavesEffect
                     (click)="updateFormStatus(true)">開放報名活動</button>
           </div>
         </ng-template>

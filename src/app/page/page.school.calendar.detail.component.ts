@@ -17,7 +17,7 @@ import {Observable, of, zip} from 'rxjs';
           <app-page-title-component title="活動預告 - {{ event.title }}"></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="this.event.enableForm === true">
-          <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+          <button type="button" class="btn btn-rounded theme-greenblue waves-light" mdbWavesEffect
                   routerLink="/school/calendar/form/{{event.key}}">報名活動</button>
         </div>
       </div>

@@ -16,7 +16,7 @@ import {Router} from '@angular/router';
           <app-page-title-component title="{{ languageCode | i18nSelect:menuMap.planCurrent }}"></app-page-title-component>
         </div>
         <div class="col mt-3" style="text-align: right" *ngIf="enableFormCurrent$|async">
-          <button type="button" class="btn btn-rounded theme-gray waves-light" mdbWavesEffect
+          <button type="button" class="btn btn-rounded theme-greenblue waves-light" mdbWavesEffect
                   routerLink="/plan/form">{{ languageCode | i18nSelect:menuMap.application }}</button>
         </div>
       </div>

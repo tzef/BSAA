@@ -4,7 +4,7 @@ import {Component} from '@angular/core';
   selector: 'app-footer-component',
   template: `
     <!--Footer-->
-    <footer class="page-footer theme-gray text-center text-md-left pt-4 mt-4">
+    <footer class="page-footer theme-orange text-center text-md-left pt-4 mt-4">
       <!--Social buttons-->
       <div class="text-center mb-3">
         <a class="btn-floating waves-light" mdbWavesEffect
@@ -30,7 +30,7 @@ import {Component} from '@angular/core';
       </div>
 
       <!--Copyright-->
-      <div class="theme-gray text-center py-3">
+      <div class="theme-orange text-center py-3">
         <div class="container-fluid">
           © 2018 Copyright： BSAA. All rights reserved.
         </div>
