@@ -77,7 +77,7 @@ export class SettingService {
       },
       application: {
         'en' : 'Application',
-        'zh' : '報名本屆炫光'
+        'zh' : '點我報名炫光徵件'
       },
       support_recruitment: {
         'en' : 'Volunteer Recruitment',

@@ -10,15 +10,15 @@ import {Component} from '@angular/core';
         <a class="btn-floating waves-light" mdbWavesEffect
            href="https://www.facebook.com/%E5%8F%B0%E7%81%A3%E7%82%AB%E5%85%89%E8%97%9D%E8%A1%93%E5%8D%94%E6%9C%83-338836259459978/"
            target="_blank">
-          <img src="/assets/fb_w.png">
+          <img src="/assets/fb.png">
         </a>
         <a class="btn-floating waves-light" mdbWavesEffect
            href="https://www.instagram.com/brightstar_arts/" target="_blank">
-          <img src="/assets/ig_w.png">
+          <img src="/assets/ig.png">
         </a>
         <a class="btn-floating waves-light" mdbWavesEffect
            href="https://www.youtube.com/channel/UCWj4Cm0BDiicehhRZyoQvHg" target="_blank">
-          <img src="/assets/youtube_w.png">
+          <img src="/assets/youtube.png">
         </a>
       </div>
       <!--/.Social buttons-->
