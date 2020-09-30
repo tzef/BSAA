@@ -25,7 +25,7 @@ import {Router} from '@angular/router';
               <input type="date" class="form-control" [(ngModel)]="dateTo">
             </div>
             <div class="col-xl-auto col-lg-auto col-md-auto col-sm-auto col-12">
-              <button type="button" (click)="this.search(searchField.value)" class="btn btn-primary waves-light" mdbWavesEffect>
+              <button type="button" (click)="this.search(searchField.value)" class="btn theme-greenblue waves-light" mdbWavesEffect>
                 <i class="fa fa-search"> 搜尋 </i></button>
             </div>
           </div>

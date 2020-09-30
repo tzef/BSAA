@@ -27,7 +27,7 @@ import {map} from 'rxjs/operators';
             <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
               {{ languageCode | i18nSelect:menuMap.plan }}
             </a>
-            <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
+            <div *dropdownMenu class="dropdown-menu dropdown" role="menu">
               <ng-container *ngIf="isAuth$|async; else planElseBlock">
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/plan/origin" routerLinkActive="active">
                   {{ languageCode | i18nSelect:menuMap.planOrigin }}
@@ -56,7 +56,7 @@ import {map} from 'rxjs/operators';
             <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
               {{ languageCode | i18nSelect:menuMap.school }}
             </a>
-            <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
+            <div *dropdownMenu class="dropdown-menu dropdown" role="menu">
               <ng-container *ngIf="isAuth$|async; else schoolElseBlock">
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/school/calendar" routerLinkActive="active">
                   {{ languageCode | i18nSelect:menuMap.schoolCalendar }}
@@ -102,7 +102,7 @@ import {map} from 'rxjs/operators';
             <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
               {{ languageCode | i18nSelect:menuMap.database }}
             </a>
-            <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
+            <div *dropdownMenu class="dropdown-menu dropdown" role="menu">
               <ng-container *ngIf="isAuth$|async; else databaseElseBlock">
                 <a class="dropdown-item waves-light" mdbWavesEffect routerLink="administrator/database/artist" routerLinkActive="active">
                   {{ languageCode | i18nSelect:menuMap.databaseArtist }}

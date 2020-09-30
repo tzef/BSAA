@@ -33,9 +33,9 @@ import {Router} from '@angular/router';
           </ng-template>
         </div>
       </div>
-      <div class="mt-3" style="background: #a1a1a1; padding: 24px" *ngIf="this.displayPlan">
+      <div class="mt-3" style="background: #F5C831; padding: 24px" *ngIf="this.displayPlan">
         <ng-container *ngFor="let text of this.donation.plan|stringNewLine">
-          <p style="color: white">{{ text }}</p>
+          <p style="color: black">{{ text }}</p>
         </ng-container>
         <div class="row">
           <div class="col-md-6">
@@ -50,11 +50,11 @@ import {Router} from '@angular/router';
           </div>
         </div>
       </div>
-      <div class="mt-3" style="background: #a1a1a1; padding: 24px" *ngIf="this.displayForm">
-        <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_application }}</p>
+      <div class="mt-3" style="background: #F5C831; padding: 24px" *ngIf="this.displayForm">
+        <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_application }}</p>
         <div class="row mt-2">
           <div class="col-md-12">
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_name }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_name }}</p>
             <div class="row">
               <div class="col-6">
                 <div class="form-group">
@@ -66,109 +66,109 @@ import {Router} from '@angular/router';
                 <div class="row mt-1" style="margin-left: 0px">
                   <div class="form-check">
                     <input name="groupSex" type="radio" id="radioMale" class="form-check-input" (click)="changeSex('先生')">
-                    <label class="form-check-label" for="radioMale"><p style="color: white">
+                    <label class="form-check-label" for="radioMale"><p style="color: black">
                     {{ languageCode | i18nSelect:menuMap.support_mr }}</p></label>
                   </div>
                   <div class="form-check">
                     <input name="groupSex" type="radio" id="radioFemale" class="form-check-input" (click)="changeSex('小姐')">
-                    <label class="form-check-label" for="radioFemale"><p style="color: white">
+                    <label class="form-check-label" for="radioFemale"><p style="color: black">
                     {{ languageCode | i18nSelect:menuMap.support_ms }}</p></label>
                   </div>
                 </div>
               </div>
             </div>
-            <p style="color: white"></p>
+            <p style="color: black"></p>
             <div class="form-group">
               <input type="date"
                      name="formBirthday"
                      class="form-control"
                      required [(ngModel)]="formBirthday">
             </div>
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_homeTel }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_homeTel }}</p>
             <div class="form-group">
               <input type="text"
                      name="formHomePhone"
                      class="form-control"
                      required [(ngModel)]="formHomePhone">
             </div>
-            <p style="color: white">{{ languageCode| i18nSelect:menuMap.support_mobile }}</p>
+            <p style="color: black">{{ languageCode| i18nSelect:menuMap.support_mobile }}</p>
             <div class="form-group">
               <input type="text"
                      name="formCellPhone"
                      class="form-control"
                      required [(ngModel)]="formCellPhone">
             </div>
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_officeTel }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_officeTel }}</p>
             <div class="form-group">
               <input type="text"
                      name="formCompanyPhone"
                      class="form-control"
                      required [(ngModel)]="formCompanyPhone">
             </div>
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_email }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_email }}</p>
             <div class="form-group">
               <input type="email"
                      name="formMail"
                      class="form-control"
                      required [(ngModel)]="formMail">
             </div>
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_address }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_address }}</p>
             <div class="form-group">
               <input type="text"
                      name="formAddress"
                      class="form-control"
                      required [(ngModel)]="formAddress">
             </div>
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_education }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_education }}</p>
             <div class="form-group">
               <div class="row">
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeDoctor" (click)="changeDegree('博士')">
-                  <label class="form-check-label" for="radioDegreeDoctor"><p style="color: white">
+                  <label class="form-check-label" for="radioDegreeDoctor"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_phD }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeMaster" (click)="changeDegree('碩士')">
-                  <label class="form-check-label" for="radioDegreeMaster"><p style="color: white">
+                  <label class="form-check-label" for="radioDegreeMaster"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_master }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeBachelor" (click)="changeDegree('大學')">
-                  <label class="form-check-label" for="radioDegreeBachelor"><p style="color: white">
+                  <label class="form-check-label" for="radioDegreeBachelor"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_university }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeVocational" (click)="changeDegree('專科')">
-                  <label class="form-check-label" for="radioDegreeVocational"><p style="color: white">
+                  <label class="form-check-label" for="radioDegreeVocational"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_college }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeSenior" (click)="changeDegree('高中')">
-                  <label class="form-check-label" for="radioDegreeSenior"><p style="color: white">
+                  <label class="form-check-label" for="radioDegreeSenior"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_seniorHigh }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeJunior" (click)="changeDegree('國中')">
-                  <label class="form-check-label" for="radioDegreeJunior"><p style="color: white">
+                  <label class="form-check-label" for="radioDegreeJunior"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_juniorHigh }}</p></label>
                 </div>
                 <div class="form-check">
                   <input class="form-check-input" name="groupDegree"
                          type="radio" id="radioDegreeUnderJunior" (click)="changeDegree('國中以下')">
-                  <label class="form-check-label" for="radioDegreeUnderJunior"><p style="color: white">
+                  <label class="form-check-label" for="radioDegreeUnderJunior"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_elementary }}</p></label>
                 </div>
               </div>
               <input type="text" name="formDegreeSchool" class="form-control mt-1" placeholder="校名" [(ngModel)]="formSchool">
               <input type="text" name="formDegreeDepartment" class="form-control mt-1" placeholder="系所" [(ngModel)]="formDepartment">
             </div>
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_secondLanguage }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_secondLanguage }}</p>
             <div class="form-group">
               <div class="row">
                 <div class="custom-control custom-checkbox ml-3 mr-2">
@@ -186,7 +186,7 @@ import {Router} from '@angular/router';
               </div>
               <input type="text" name="formLanguageOthers" class="form-control mt-1" placeholder="其他語言" [(ngModel)]="formLanguageOthers">
             </div>
-            <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_affiliation }}</p>
+            <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_affiliation }}</p>
             <div class="form-group">
               <div class="row no-gutters">
                 <div class="col-lg-1 col-md-2 mt-1">
@@ -255,17 +255,17 @@ import {Router} from '@angular/router';
                           [(ngModel)]="formVolunteerExperience"></textarea>
               </div>
               <div class="row" style="margin-left: 0px">
-                <p style="color: white"><p style="color: white">{{ languageCode | i18nSelect:menuMap.support_volunteerCertificate }}</p>
+                <p style="color: black"><p style="color: black">{{ languageCode | i18nSelect:menuMap.support_volunteerCertificate }}</p>
                 <div class="form-check">
                   <input name="groupVolunteerBook" type="radio" id="radioVolunteerYes" class="form-check-input"
                          (click)="changeVolunteerBook(true)">
-                  <label class="form-check-label" for="radioVolunteerYes"><p style="color: white">
+                  <label class="form-check-label" for="radioVolunteerYes"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_yes }}</p></label>
                 </div>
                 <div class="form-check">
                   <input name="groupVolunteerBook" type="radio" id="radioVolunteerNo" class="form-check-input"
                          (click)="changeVolunteerBook(false)">
-                  <label class="form-check-label" for="radioVolunteerNo"><p style="color: white">
+                  <label class="form-check-label" for="radioVolunteerNo"><p style="color: black">
                   {{ languageCode | i18nSelect:menuMap.support_no }}</p></label>
                 </div>
               </div>
@@ -275,7 +275,7 @@ import {Router} from '@angular/router';
               <div class="form-group">
                 <textarea type="text" [(ngModel)]="formIntroduce" placeholder="自我介紹" class="md-textarea form-control" rows="3"></textarea>
               </div>
-              <p style="color: white">{{ languageCode | i18nSelect:menuMap.support_uploadHeadshot }}</p>
+              <p style="color: black">{{ languageCode | i18nSelect:menuMap.support_uploadHeadshot }}</p>
               <input mdbInputDirective type="file" class="form-control" (change)="this.formFile = $event.target.files[0]">
             </div>
             <div *ngIf="uploading === true" style="height: 20px; background-color: burlywood"
