@@ -74,6 +74,13 @@ import {EventModel} from '../model/event.model';
               <input type="text" name="formRelation" class="form-control" [(ngModel)]="formRelationOthers">
             </div>
           </div>
+          <div class="form-group">
+            <strong>6. 你是從何處得知炫光計劃？</strong>
+            <input type="text"
+                   name="formWhereKnowUs"
+                   class="form-control"
+                   required [(ngModel)]="formWhereKnowUs">
+          </div>
           <ng-container *ngIf="this.event.enableForm === true; else enableFormElseBlock">
             <p class="float-right"><input type="submit" class="btn btn-dark" value="提交" (click)="submit()"></p>
           </ng-container>
@@ -96,6 +103,7 @@ export class PageSchoolCalendarDetailFormComponent implements OnInit, OnDestroy 
   formMail = '';
   formRelation = '';
   formRelationOthers = '';
+  formWhereKnowUs = '';
 
   @Input()
   set id(id: string) {
@@ -141,6 +149,8 @@ export class PageSchoolCalendarDetailFormComponent implements OnInit, OnDestroy 
       alert('請選擇與台灣炫光藝術協會的關係');
     } else if (this.formRelation === '其他' && this.formRelationOthers === '') {
       alert('請輸入其他關係的內容');
+    } else if (this.formWhereKnowUs === '') {
+      alert('請輸入你是從何處得知炫光計劃？');
     } else {
       if (this.formRelation === '其他') {
         this.formRelation = '其他_' + this.formRelationOthers;
@@ -153,13 +163,14 @@ export class PageSchoolCalendarDetailFormComponent implements OnInit, OnDestroy 
           phone: this.formPhone,
           email: this.formMail,
           relation: this.formRelation,
+          formWhereKnowUs: this.formWhereKnowUs,
           createdAt: date,
         })
         .then(_ => {
           const html = `<div>報名活動: ${this.event.title}_${this.event.subTitle}</div>
 <div>姓名: ${this.formName}</div><div>性別: ${this.formSex}</div>
 <div>聯絡電話: ${this.formPhone}</div><div>Email: <a href="mailto:${this.formMail}">${this.formMail}</a></div>
-<div>與台灣炫光藝術協會的關係: ${this.formRelation}</div><div>表單送出時間: ${date}</div>`;
+<div>與台灣炫光藝術協會的關係: ${this.formRelation}</div><div>你是從何處得知炫光計劃？: ${this.formWhereKnowUs}</div><div>表單送出時間: ${date}</div>`;
           this.database.list('sendBox')
             .push({
               title: '報名炫光小學堂活動_' + this.event.title + '_' + this.formName,
@@ -171,6 +182,7 @@ export class PageSchoolCalendarDetailFormComponent implements OnInit, OnDestroy 
               this.formPhone = '';
               this.formMail = '';
               this.formRelationOthers = '';
+              this.formWhereKnowUs = '';
               this.toastService.success('表單送出成功！');
             }, results => {
               this.toastService.error('表單送出失敗，請稍候再試。');
