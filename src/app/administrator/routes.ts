@@ -21,6 +21,7 @@ import {AdministratorPageDatabaseCoolguyDetailComponent} from './administrator.p
 import {AdministratorPage2018Component} from './administrator.page.2018';
 import {AdministratorPage2019Component} from './administrator.page.2019';
 import {AdministratorPage2020Component} from './administrator.page.2020';
+import {AdministratorPageFormComponent} from './administrator.page.form';
 
 export const routes = [{
   path: 'administrator',
@@ -149,6 +150,11 @@ export const routes = [{
       path: '2020',
       canActivate: [AuthGuard],
       component: AdministratorPage2020Component
+    },
+    {
+      path: 'form/:id',
+      canActivate: [AuthGuard],
+      component: AdministratorPageFormComponent
     }
   ]
 }];

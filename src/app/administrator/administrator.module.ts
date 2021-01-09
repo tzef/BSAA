@@ -31,6 +31,7 @@ import {AdministratorPageDatabaseCoolguyDetailComponent} from './administrator.p
 import {AdministratorPage2018Component} from './administrator.page.2018';
 import {AdministratorPage2019Component} from './administrator.page.2019';
 import {AdministratorPage2020Component} from './administrator.page.2020';
+import {AdministratorPageFormComponent} from './administrator.page.form';
 
 @NgModule({
   imports: [
@@ -53,7 +54,7 @@ import {AdministratorPage2020Component} from './administrator.page.2020';
     AdministratorPageDatabaseArtistComponent, AdministratorPageDatabaseArtistDetailComponent,
     AdministratorPageDatabaseCoolguyComponent, AdministratorPageDatabaseCoolguyDetailComponent,
     AdministratorPageDonationComponents,
-    AdministratorPage2018Component, AdministratorPage2019Component, AdministratorPage2020Component
+    AdministratorPage2018Component, AdministratorPage2019Component, AdministratorPage2020Component, AdministratorPageFormComponent
   ],
   providers: [AngularFireAuth, AuthGuard],
   exports: []

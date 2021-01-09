@@ -19,6 +19,10 @@ export class FormPlanModel {
   productSize: string;
   school: string;
   videoUrl: string;
+  phone: string;
+  relation: string;
+  sex: string;
+  whereKnowUs: string;
 
   constructor(json, key = null) {
     this.key = key;
@@ -39,5 +43,9 @@ export class FormPlanModel {
     this.productSize = json.productSize ? json.productSize : '';
     this.school = json.school ? json.school : '';
     this.videoUrl = json.videoUrl ? json.videoUrl : '';
+    this.phone = json.phone ? json.phone : '';
+    this.relation = json.relation ? json.relation : '';
+    this.sex = json.sex ? json.sex : '';
+    this.whereKnowUs = json.whereKnowUs ? json.whereKnowUs : '';
   }
 }

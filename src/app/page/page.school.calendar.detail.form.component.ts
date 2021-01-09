@@ -163,7 +163,7 @@ export class PageSchoolCalendarDetailFormComponent implements OnInit, OnDestroy 
           phone: this.formPhone,
           email: this.formMail,
           relation: this.formRelation,
-          formWhereKnowUs: this.formWhereKnowUs,
+          whereKnowUs: this.formWhereKnowUs,
           createdAt: date,
         })
         .then(_ => {
