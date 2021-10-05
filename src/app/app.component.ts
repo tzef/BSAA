@@ -11,7 +11,7 @@ declare let gtag: Function;
 })
 export class AppComponent implements OnInit {
   constructor(private router: Router, private titleService: Title) {
-    this.titleService.setTitle('台灣炫光藝術協會');
+    this.titleService.setTitle('社團法人台灣炫光藝術協會');
     this.router.events
       .pipe(distinctUntilChanged((previous: any, current: any) => {
         if (current instanceof NavigationEnd) {
