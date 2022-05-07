@@ -44,7 +44,7 @@ import {map} from 'rxjs/operators';
             <img src="/assets/ig.png">
           </a>
           <a class="btn-floating waves-light" mdbWavesEffect
-             href="https://www.youtube.com/channel/UCWj4Cm0BDiicehhRZyoQvHg" target="_blank">
+             href="https://www.youtube.com/channel/UCDL8tQEfCHPFCYSipXw7GhA" target="_blank">
             <img src="/assets/youtube.png">
           </a>
         </div>

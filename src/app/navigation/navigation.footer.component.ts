@@ -17,22 +17,21 @@ import {Component} from '@angular/core';
           <img src="/assets/ig.png">
         </a>
         <a class="btn-floating waves-light" mdbWavesEffect
-           href="https://www.youtube.com/channel/UCWj4Cm0BDiicehhRZyoQvHg" target="_blank">
+           href="https://www.youtube.com/channel/UCDL8tQEfCHPFCYSipXw7GhA" target="_blank">
           <img src="/assets/youtube.png">
         </a>
       </div>
       <!--/.Social buttons-->
 
       <div class="text-center">
-        <span style="font-size: 12px; color: black">11148 臺北市士林區忠誠路一段 62 號 3 樓 </span><br>
-        <i class="fa fa-phone" style="color: black"> </i><span style="font-size: 12px; color: black"> 886-2-2833-2255 #131 </span>
+        <i class="fa fa-phone" style="color: black"> </i><span style="font-size: 12px; color: black"> 0989-876-225 </span>
         <i class="fa fa-envelope" style="color: black"> </i><span style="font-size: 12px; color: black"> info@bsaa.org </span>
       </div>
 
       <!--Copyright-->
       <div class="theme-orange text-center py-3">
         <div class="container-fluid" style="color: black">
-          © 2020 Copyright： BSAA. All rights reserved.
+          © 2022 Copyright： BSAA. All rights reserved.
         </div>
       </div>
       <!--/.Copyright-->
