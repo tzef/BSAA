@@ -152,6 +152,11 @@ export const routes = [{
       component: AdministratorPage2020Component
     },
     {
+      path: '2022',
+      canActivate: [AuthGuard],
+      component: AdministratorPage2022Component
+    },
+    {
       path: 'form/:id',
       canActivate: [AuthGuard],
       component: AdministratorPageFormComponent
