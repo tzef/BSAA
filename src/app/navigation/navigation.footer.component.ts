@@ -24,7 +24,6 @@ import {Component} from '@angular/core';
       <!--/.Social buttons-->
 
       <div class="text-center">
-        <i class="fa fa-phone" style="color: black"> </i><span style="font-size: 12px; color: black"> 0989-876-225 </span>
         <i class="fa fa-envelope" style="color: black"> </i><span style="font-size: 12px; color: black"> info@bsaa.org </span>
       </div>
 
