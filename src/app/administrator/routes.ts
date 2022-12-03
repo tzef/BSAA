@@ -21,6 +21,7 @@ import {AdministratorPageDatabaseCoolguyDetailComponent} from './administrator.p
 import {AdministratorPage2018Component} from './administrator.page.2018';
 import {AdministratorPage2019Component} from './administrator.page.2019';
 import {AdministratorPage2020Component} from './administrator.page.2020';
+import {AdministratorPage2022Component} from './administrator.page.2022';
 import {AdministratorPageFormComponent} from './administrator.page.form';
 
 export const routes = [{
